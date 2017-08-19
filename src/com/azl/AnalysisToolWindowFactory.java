@@ -11,6 +11,7 @@ import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class AnalysisToolWindowFactory implements ToolWindowFactory {
 
@@ -19,10 +20,17 @@ public class AnalysisToolWindowFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         JPanel panel = new JPanel();
-        String txt = "<html><h2>Analysis Tool Window!</h2><hr/><b>Hello</b> from <a href='#'></a></html>";
-        messageLabel = new JLabel(txt);
+        panel.setLayout(new GridBagLayout());
 
-        panel.add(messageLabel);
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+
+        panel.add(new JLabel("<html><h2>Analysis Tool Window</h2></html>"), c);
+
+        c.gridy = c.gridy+1;
+        messageLabel = new JLabel("Messages go here!");
+        panel.add(messageLabel, c);
 
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(panel,"",false);

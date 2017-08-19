@@ -16,7 +16,11 @@ import org.codehaus.plexus.component.manager.ComponentManager;
 import org.jetbrains.annotations.NotNull;
 import org.sonatype.nexus.index.treeview.DefaultTreeNode;
 
+import javax.enterprise.inject.Default;
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,11 +28,14 @@ import java.awt.event.ActionListener;
 
 public class IssuesToolWindowFactory implements ToolWindowFactory {
 
+    MessageBus messageBus = null;
+    ChangeActionNotifier publisher = null;
+
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content formContent = contentFactory.createContent(getFormContent(),"Content1",false);
-        Content treeContent = contentFactory.createContent(getTreePanel(),"Content2",false);
+        Content formContent = contentFactory.createContent(getFormContent(),"Form",false);
+        Content treeContent = contentFactory.createContent(getTreePanel(),"Tree",false);
 
         toolWindow.getContentManager().addContent(treeContent);
         toolWindow.getContentManager().addContent(formContent);
@@ -38,14 +45,72 @@ public class IssuesToolWindowFactory implements ToolWindowFactory {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-//        DefaultTreeModel model = new DefaultTreeModel();
-
-        Tree tree = new Tree();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Vehicles");
+        createNodes(root);
+        Tree tree = new Tree(root);
         tree.setShowsRootHandles(true);
-//        tree.setModel(model);
+
+        tree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+                publisher.afterAction(selectedNode.toString());
+
+            }
+        });
 
         panel.add(new JBScrollPane(tree), BorderLayout.CENTER);
         return panel;
+    }
+
+    private void createNodes(DefaultMutableTreeNode root) {
+        DefaultMutableTreeNode vehicleTypes = null;
+        DefaultMutableTreeNode vehicle = null;
+
+        vehicleTypes = new DefaultMutableTreeNode("SUVs");
+        root.add(vehicleTypes);
+
+        vehicle = new DefaultMutableTreeNode("Jeep Grand Cherokee");
+        vehicleTypes.add(vehicle);
+        vehicle = new DefaultMutableTreeNode("Ford Explorer");
+        vehicleTypes.add(vehicle);
+        vehicle = new DefaultMutableTreeNode("Toyota 4Runner");
+        vehicleTypes.add(vehicle);
+        vehicle = new DefaultMutableTreeNode("Chevy Tahoe");
+        vehicleTypes.add(vehicle);
+
+        vehicleTypes = new DefaultMutableTreeNode("Sedans");
+        root.add(vehicleTypes);
+
+        vehicle = new DefaultMutableTreeNode("BMW 540i");
+        vehicleTypes.add(vehicle);
+        vehicle = new DefaultMutableTreeNode("Nissan Altima");
+        vehicleTypes.add(vehicle);
+
+        vehicleTypes = new DefaultMutableTreeNode("Trucks");
+        root.add(vehicleTypes);
+
+        vehicle = new DefaultMutableTreeNode("Toyota Tacoma");
+        vehicleTypes.add(vehicle);
+        vehicle = new DefaultMutableTreeNode("Nissan Frontier");
+        vehicleTypes.add(vehicle);
+        vehicle = new DefaultMutableTreeNode("Ford F-150");
+        vehicleTypes.add(vehicle);
+        vehicle = new DefaultMutableTreeNode("Dodge RAM");
+        vehicleTypes.add(vehicle);
+        vehicle = new DefaultMutableTreeNode("Chevy Silverado");
+        vehicleTypes.add(vehicle);
+
+        vehicleTypes = new DefaultMutableTreeNode("Performance");
+        root.add(vehicleTypes);
+
+        vehicle = new DefaultMutableTreeNode("Chevrolet SS");
+        vehicleTypes.add(vehicle);
+        vehicle = new DefaultMutableTreeNode("Ford Mustang GT");
+        vehicleTypes.add(vehicle);
+        vehicle = new DefaultMutableTreeNode("Mazda Miata MX-5");
+        vehicleTypes.add(vehicle);
+
     }
 
     private JPanel getFormContent() {
@@ -67,11 +132,6 @@ public class IssuesToolWindowFactory implements ToolWindowFactory {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Sending message...");
-                Application application = ApplicationManager.getApplication();
-                MessageBus bus = application.getMessageBus();
-                ChangeActionNotifier publisher = bus.syncPublisher(ChangeActionNotifier.CHANGE_ACTION_TOPIC);
-                publisher.beforeAction("oh hai!");
-                publisher.afterAction("Sharon!");
             }
         });
         panel.add(button);
@@ -80,7 +140,9 @@ public class IssuesToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void init(ToolWindow window) {
-
+        Application application = ApplicationManager.getApplication();
+        messageBus = application.getMessageBus();
+        publisher = messageBus.syncPublisher(ChangeActionNotifier.CHANGE_ACTION_TOPIC);
     }
 
     @Override
