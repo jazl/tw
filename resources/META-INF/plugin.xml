@@ -25,9 +25,10 @@
   -->
 
   <extensions defaultExtensionNs="com.intellij">
-    <toolWindow id="Issues" secondary="true" icon="/icons/plus.png" anchor="bottom" factoryClass="com.azl.IssuesToolWindowFactory"/>
-    <toolWindow id="Analysis Results" secondary="false" icon="/icons/plus.png" anchor="right" factoryClass="com.azl.AnalysisResultsToolWindowFactory"/>
+    <toolWindow id="Analysis Results" secondary="true" icon="/icons/plus.png" anchor="left" factoryClass="com.azl.AnalysisResultsToolWindowFactory"/>
+    <toolWindow id="Issue Summary" secondary="false" icon="/icons/plus.png" anchor="right" factoryClass="com.azl.IssueSummaryToolWindowFactory"/>
     <toolWindow id="Analysis Trace" secondary="false" icon="/icons/plus.png" anchor="bottom" factoryClass="com.azl.AnalysisTraceToolWindowFactory"/>
+    <toolWindow id="Audit Summary" secondary="false" icon="/icons/plus.png" anchor="bottom" factoryClass="com.azl.AuditSummaryToolWindowFactory"/>
   </extensions>
 
   <actions>

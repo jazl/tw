@@ -19,26 +19,16 @@ public class ShowTw extends AnAction {
         Project project = anActionEvent.getProject();
         //ToolWindowManager.getInstance(project).registerToolWindow("Issues",false, ToolWindowAnchor.BOTTOM);
 
-        Editor editor = anActionEvent.getRequiredData(CommonDataKeys.EDITOR);
-        CaretModel caretModel = editor.getCaretModel();
+        ToolWindow results = ToolWindowManager.getInstance(project).getToolWindow("Analysis Results");
+        results.activate(null);
 
-        LogicalPosition logicalPosition = caretModel.getLogicalPosition();
-        VisualPosition visualPosition = caretModel.getVisualPosition();
-        int offset = caretModel.getOffset();
-        Messages.showInfoMessage(logicalPosition.toString() + "\n" +
-                visualPosition.toString() + "\n" +
-                "Offset: " + offset, "Caret Parameters Inside The Editor");
+        ToolWindow summary = ToolWindowManager.getInstance(project).getToolWindow("Issue Summary");
+        summary.activate(null);
 
-        //editor.visualPositionToXY(new VisualPosition(15,0));
-        editor.visualPositionToXY(editor.getCaretModel().getVisualPosition());
+        ToolWindow trace = ToolWindowManager.getInstance(project).getToolWindow("Analysis Trace");
+        trace.activate(null);
 
-        ToolWindow tw = ToolWindowManager.getInstance(project).getToolWindow("Issues");
-        tw.activate(null);
-
-        ToolWindow tw2 = ToolWindowManager.getInstance(project).getToolWindow("Analysis Results");
-        tw2.activate(null);
-
-        ToolWindow tw3 = ToolWindowManager.getInstance(project).getToolWindow("Analysis Trace");
-        tw3.activate(null);
+        ToolWindow auditSummary = ToolWindowManager.getInstance(project).getToolWindow("Audit Summary");
+        auditSummary.activate(null);
     }
 }
