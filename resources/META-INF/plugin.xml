@@ -26,11 +26,12 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <toolWindow id="Issues" secondary="true" icon="/icons/plus.png" anchor="bottom" factoryClass="com.azl.IssuesToolWindowFactory"/>
-    <toolWindow id="Analysis" secondary="false" icon="/icons/plus.png" anchor="right" factoryClass="com.azl.AnalysisToolWindowFactory"/>
+    <toolWindow id="Analysis Results" secondary="false" icon="/icons/plus.png" anchor="right" factoryClass="com.azl.AnalysisResultsToolWindowFactory"/>
+    <toolWindow id="Analysis Trace" secondary="false" icon="/icons/plus.png" anchor="bottom" factoryClass="com.azl.AnalysisTraceToolWindowFactory"/>
   </extensions>
 
   <actions>
-    <group id="com.azl.PluginGroup" text="Toolwindows" description="Show Toolwindows" >
+    <group id="com.azl.Toolwindows.group" text="Toolwindows" description="Show Toolwindows" >
       <add-to-group group-id="MainMenu" anchor="before" relative-to-action="WindowMenu"/>
       <action id="com.azl.showTw" class="com.azl.ShowTw" text="Show" description="Shows some toolwindows n shit" />
     </group>

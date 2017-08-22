@@ -2,11 +2,10 @@ package com.azl;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.editor.*;
+import com.intellij.openapi.fileEditor.*;
+import com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -30,22 +29,27 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
-public class AnalysisToolWindowFactory implements ToolWindowFactory {
+public class AnalysisResultsToolWindowFactory implements ToolWindowFactory {
 
     JLabel messageLabel;
 
     private void createNewFile() {
 
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
+        final String testFilePath = project.getBasePath()+"\\src\\com\\azl2\\bigfile.java";
 
-        final String testFilePath = "D:\\work\\intellij-plugin\\plugins\\tw\\src\\com\\azl\\ShowTw.java";
         final VirtualFile testFile = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(new File(testFilePath));
 
         LocalFileSystem fileSystem = LocalFileSystem.getInstance();
         OpenFileDescriptor openFileDescriptor = new OpenFileDescriptor(project, testFile);
+        int line = openFileDescriptor.getLine();
+        System.out.println("openFileDescriptor.getLine() = "+line);
+
         FileEditorManager fem = FileEditorManager.getInstance(project);
-        fem.openEditor(openFileDescriptor, true);
+        List<FileEditor> fileEditors = fem.openEditor(openFileDescriptor, true);
+
     }
 
     private void createNewDocument() {
@@ -83,14 +87,14 @@ public class AnalysisToolWindowFactory implements ToolWindowFactory {
         c.gridx = 0;
         c.gridy = 0;
 
-        panel.add(new JLabel("<html><h2>Analysis Tool Window</h2></html>"), c);
+        panel.add(new JLabel("<html><h2>Analysis Results</h2></html>"), c);
 
         c.gridy = c.gridy+1;
         messageLabel = new JLabel("Messages go here!");
         panel.add(messageLabel, c);
 
         c.gridy = c.gridy+1;
-        JButton newFileButton = new JButton("New File");
+        JButton newFileButton = new JButton("Show File in Editor");
         newFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -100,7 +104,7 @@ public class AnalysisToolWindowFactory implements ToolWindowFactory {
         panel.add(newFileButton, c);
 
         c.gridy = c.gridy+1;
-        JButton newDocButton = new JButton("New Document");
+        JButton newDocButton = new JButton("Show In-Memory Document");
         newDocButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
