@@ -1,5 +1,6 @@
 package com.azl;
 
+import com.intellij.codeInspection.ui.OptionAccessor;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -20,6 +21,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.function.BiConsumer;
 
 public class IssuesToolWindowFactory implements ToolWindowFactory {
 
@@ -58,53 +62,42 @@ public class IssuesToolWindowFactory implements ToolWindowFactory {
         return panel;
     }
 
+    private DefaultMutableTreeNode createCategoryNodeAndChildren(String catNodeName, HashMap<String, ArrayList> vulnerabilities) {
+        final DefaultMutableTreeNode catNode = new DefaultMutableTreeNode(catNodeName);
+
+        vulnerabilities.forEach(new BiConsumer<String, ArrayList>() {
+            @Override
+            public void accept(String vulnName, ArrayList traces) {
+                DefaultMutableTreeNode vulnNodes = new DefaultMutableTreeNode(vulnName);
+                for(int i=0; i<traces.size(); i++) {
+                    vulnNodes.add(new DefaultMutableTreeNode(traces.get(i)));
+                }
+                catNode.add(vulnNodes);
+            }
+        });
+
+        return catNode;
+    }
+
     private void createNodes(DefaultMutableTreeNode root) {
-        DefaultMutableTreeNode vehicleTypes = null;
-        DefaultMutableTreeNode vehicle = null;
+        HashMap<String, ArrayList> vulnerabilities;
+        ArrayList<String> traceNodes;
 
-        vehicleTypes = new DefaultMutableTreeNode("SUVs");
-        root.add(vehicleTypes);
+        traceNodes = new ArrayList<>();
+        traceNodes.add("ParameterParser.java:593 - getParameterValues(return)");
+        traceNodes.add("ParameterParser.java:593 - Return");
+        traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
+        vulnerabilities = new HashMap<>();
+        vulnerabilities.put("Exec.java:103", traceNodes);
+        root.add(createCategoryNodeAndChildren("Command Injection (3)", vulnerabilities));
 
-        vehicle = new DefaultMutableTreeNode("Jeep Grand Cherokee");
-        vehicleTypes.add(vehicle);
-        vehicle = new DefaultMutableTreeNode("Ford Explorer");
-        vehicleTypes.add(vehicle);
-        vehicle = new DefaultMutableTreeNode("Toyota 4Runner");
-        vehicleTypes.add(vehicle);
-        vehicle = new DefaultMutableTreeNode("Chevy Tahoe");
-        vehicleTypes.add(vehicle);
-
-        vehicleTypes = new DefaultMutableTreeNode("Sedans");
-        root.add(vehicleTypes);
-
-        vehicle = new DefaultMutableTreeNode("BMW 540i");
-        vehicleTypes.add(vehicle);
-        vehicle = new DefaultMutableTreeNode("Nissan Altima");
-        vehicleTypes.add(vehicle);
-
-        vehicleTypes = new DefaultMutableTreeNode("Trucks");
-        root.add(vehicleTypes);
-
-        vehicle = new DefaultMutableTreeNode("Toyota Tacoma");
-        vehicleTypes.add(vehicle);
-        vehicle = new DefaultMutableTreeNode("Nissan Frontier");
-        vehicleTypes.add(vehicle);
-        vehicle = new DefaultMutableTreeNode("Ford F-150");
-        vehicleTypes.add(vehicle);
-        vehicle = new DefaultMutableTreeNode("Dodge RAM");
-        vehicleTypes.add(vehicle);
-        vehicle = new DefaultMutableTreeNode("Chevy Silverado");
-        vehicleTypes.add(vehicle);
-
-        vehicleTypes = new DefaultMutableTreeNode("Performance");
-        root.add(vehicleTypes);
-
-        vehicle = new DefaultMutableTreeNode("Chevrolet SS");
-        vehicleTypes.add(vehicle);
-        vehicle = new DefaultMutableTreeNode("Ford Mustang GT");
-        vehicleTypes.add(vehicle);
-        vehicle = new DefaultMutableTreeNode("Mazda Miata MX-5");
-        vehicleTypes.add(vehicle);
+        traceNodes = new ArrayList<>();
+        traceNodes.add("ParameterParser.java:593 - getParameterValues(return)");
+        traceNodes.add("ParameterParser.java:593 - Return");
+        traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
+        vulnerabilities = new HashMap<>();
+        vulnerabilities.put("Exec.java:103", traceNodes);
+        root.add(createCategoryNodeAndChildren("Command Injection", vulnerabilities));
 
     }
 

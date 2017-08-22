@@ -13,15 +13,16 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.ui.components.JBList;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -63,20 +64,42 @@ public class AnalysisTraceToolWindowFactory implements ToolWindowFactory {
         messageLabel = new JLabel("Messages go here!");
         panel.add(messageLabel, c);
 
-        c.gridy = c.gridy+1;
-        txtLineNumber = new JTextField(10);
-        txtLineNumber.setText("5");
-        panel.add(txtLineNumber, c);
+//        c.gridy = c.gridy+1;
+//        txtLineNumber = new JTextField(10);
+//        txtLineNumber.setText("5");
+//        panel.add(txtLineNumber, c);
+//
+//        c.gridy = c.gridy+1;
+//        JButton goButton = new JButton("Go To Line");
+//        goButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                gotoLine(Integer.parseInt(txtLineNumber.getText()));
+//            }
+//        });
+//        panel.add(goButton, c);
 
         c.gridy = c.gridy+1;
-        JButton goButton = new JButton("Go To Line");
-        goButton.addActionListener(new ActionListener() {
+        c.fill = GridBagConstraints.HORIZONTAL;
+        JBList<String> list = new JBList<String>();
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        listModel.addElement("Go to line: 1");
+        listModel.addElement("Go to line: 15");
+        listModel.addElement("Go to line: 25");
+        listModel.addElement("Go to line: 35");
+        listModel.addElement("Go to line: 50");
+        listModel.addElement("Go to line: 99");
+        list.setModel(listModel);
+        list.addListSelectionListener(new ListSelectionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                gotoLine(Integer.parseInt(txtLineNumber.getText()));
+            public void valueChanged(ListSelectionEvent e) {
+                String selectedValue = list.getSelectedValue();
+                String lineNum = selectedValue.substring(selectedValue.indexOf(":")+1).trim();
+                gotoLine(Integer.parseInt(lineNum));
             }
         });
-        panel.add(goButton, c);
+        panel.add(new JBScrollPane(list), c);
 
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(panel,"",false);
