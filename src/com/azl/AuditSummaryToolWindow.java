@@ -2,60 +2,49 @@ package com.azl;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.fileEditor.*;
-import com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorImpl;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.ui.components.JBList;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.messages.MessageBus;
-import org.jdesktop.swingx.action.ActionManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
 
-public class IssueSummaryToolWindowFactory implements ToolWindowFactory {
+public class AuditSummaryToolWindow implements ToolWindowFactory {
 
     JLabel messageLabel;
+    JTextField txtLineNumber;
 
-    private JPanel createDetailsContent(){
+    private JPanel createAuditContent(){
         JPanel panel = new JPanel();
-        panel.add(new JLabel("Details go here"));
+        panel.add(new JLabel("Audit content goes here"));
         return panel;
     }
-    private JPanel createRecommendationsContent(){
+    private JPanel createHistoryContent(){
         JPanel panel = new JPanel();
-        panel.add(new JLabel("Recommendations go here"));
+        panel.add(new JLabel("History content goes here"));
         return panel;
     }
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         JPanel panel = new JPanel();
-
         panel.setLayout(new BorderLayout());
 
         JBTabbedPane tab = new JBTabbedPane();
-        tab.addTab("Details", createDetailsContent());
-        tab.addTab("Recommendations", createRecommendationsContent());
+        tab.addTab("Audit", createAuditContent());
+        tab.addTab("History", createHistoryContent());
 
         panel.add(tab, BorderLayout.CENTER);
 

@@ -35,10 +35,13 @@ import java.io.File;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-public class AnalysisResultsToolWindowFactory implements ToolWindowFactory {
+public class AnalysisResultsToolWindow implements ToolWindowFactory {
 
     MessageBus messageBus = null;
     ChangeActionNotifier publisher = null;
+
+    public AnalysisResultsToolWindow() {
+    }
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {

@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-public class AnalysisTraceToolWindowFactory implements ToolWindowFactory {
+public class AnalysisTraceToolWindow implements ToolWindowFactory {
 
     JLabel messageLabel;
     JTextField txtLineNumber;

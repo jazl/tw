@@ -9,9 +9,12 @@ import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.editor.VisualPosition;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
+
+import javax.swing.*;
 
 public class ShowTw extends AnAction {
     @Override
@@ -19,8 +22,9 @@ public class ShowTw extends AnAction {
         Project project = anActionEvent.getProject();
         //ToolWindowManager.getInstance(project).registerToolWindow("Issues",false, ToolWindowAnchor.BOTTOM);
 
-        ToolWindow results = ToolWindowManager.getInstance(project).getToolWindow("Analysis Results");
-        results.activate(null);
+        ToolWindow analysisResults = ToolWindowManager.getInstance(project).getToolWindow("Analysis Results");
+        analysisResults.setIcon(new ImageIcon(ShowTw.class.getResource("/icons/analysis_results.png")));
+        analysisResults.activate(null);
 
         ToolWindow summary = ToolWindowManager.getInstance(project).getToolWindow("Issue Summary");
         summary.activate(null);

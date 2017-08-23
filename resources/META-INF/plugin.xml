@@ -1,7 +1,7 @@
 <idea-plugin>
-  <id>com.your.company.unique.plugin.id</id>
-  <name>Plugin display name here</name>
-  <version>1.0</version>
+  <id>com.hpe.fod.remediation.plugin.prototype</id>
+  <name>Remediation Plugin Prototype</name>
+  <version>0.001</version>
   <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
   <description><![CDATA[
@@ -25,10 +25,10 @@
   -->
 
   <extensions defaultExtensionNs="com.intellij">
-    <toolWindow id="Analysis Results" secondary="true" icon="/icons/plus.png" anchor="left" factoryClass="com.azl.AnalysisResultsToolWindowFactory"/>
-    <toolWindow id="Issue Summary" secondary="false" icon="/icons/plus.png" anchor="right" factoryClass="com.azl.IssueSummaryToolWindowFactory"/>
-    <toolWindow id="Analysis Trace" secondary="false" icon="/icons/plus.png" anchor="bottom" factoryClass="com.azl.AnalysisTraceToolWindowFactory"/>
-    <toolWindow id="Audit Summary" secondary="false" icon="/icons/plus.png" anchor="bottom" factoryClass="com.azl.AuditSummaryToolWindowFactory"/>
+    <toolWindow id="Analysis Results" secondary="true" icon="/icons/analysis_results.png" anchor="left" factoryClass="com.azl.AnalysisResultsToolWindow"/>
+    <toolWindow id="Issue Summary" secondary="false" icon="/icons/summary.png" anchor="right" factoryClass="com.azl.IssueSummaryToolWindow"/>
+    <toolWindow id="Analysis Trace" secondary="false" icon="/icons/issue_details.png" anchor="bottom" factoryClass="com.azl.AnalysisTraceToolWindow"/>
+    <toolWindow id="Audit Summary" secondary="false" icon="/icons/summary.png" anchor="bottom" factoryClass="com.azl.AuditSummaryToolWindow"/>
   </extensions>
 
   <actions>
