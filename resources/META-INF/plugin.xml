@@ -26,15 +26,15 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <toolWindow id="Analysis Results" secondary="true" icon="/icons/analysis_results.png" anchor="left" factoryClass="com.azl.AnalysisResultsToolWindow"/>
-    <toolWindow id="Issue Summary" secondary="false" icon="/icons/summary.png" anchor="right" factoryClass="com.azl.IssueSummaryToolWindow"/>
-    <toolWindow id="Analysis Trace" secondary="false" icon="/icons/issue_details.png" anchor="bottom" factoryClass="com.azl.AnalysisTraceToolWindow"/>
-    <toolWindow id="Audit Summary" secondary="false" icon="/icons/summary.png" anchor="bottom" factoryClass="com.azl.AuditSummaryToolWindow"/>
+    <toolWindow id="Issue Summary" secondary="true" icon="/icons/summary.png" anchor="right" factoryClass="com.azl.IssueSummaryToolWindow"/>
+    <toolWindow id="Analysis Trace" secondary="true" icon="/icons/issue_details.png" anchor="bottom" factoryClass="com.azl.AnalysisTraceToolWindow"/>
+    <toolWindow id="Audit Summary" secondary="true" icon="/icons/summary.png" anchor="bottom" factoryClass="com.azl.AuditSummaryToolWindow"/>
   </extensions>
 
   <actions>
-    <group id="com.azl.Toolwindows.group" text="Toolwindows" description="Show Toolwindows" >
+    <group id="com.azl.Toolwindows.group" text="Fortify" description="Fortify" >
       <add-to-group group-id="MainMenu" anchor="before" relative-to-action="WindowMenu"/>
-      <action id="com.azl.showTw" class="com.azl.ShowTw" text="Show" description="Shows some toolwindows n shit" />
+      <action id="com.azl.showTw" class="com.azl.RemediationAction" text="Open Analysis Results..." description="Open Analysis Results" />
     </group>
     <!-- Add your actions here -->
   </actions>
