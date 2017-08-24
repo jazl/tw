@@ -11,6 +11,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
@@ -28,6 +29,7 @@ import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 import java.io.File;
 import java.util.*;
@@ -91,6 +93,10 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         createNodes(root);
         Tree tree = new Tree(root);
         tree.setRootVisible(false);
+
+        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+        renderer.setLeafIcon(IconLoader.getIcon("/icons/trace/Generic.png"));
+        tree.setCellRenderer(renderer);
 
         tree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
