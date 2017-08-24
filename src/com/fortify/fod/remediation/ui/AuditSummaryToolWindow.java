@@ -1,62 +1,43 @@
-package com.azl;
+package com.fortify.fod.remediation.ui;
 
+import com.fortify.fod.remediation.ChangeActionNotifier;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.fileEditor.*;
-import com.intellij.openapi.fileEditor.impl.text.PsiAwareTextEditorImpl;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
-import com.intellij.ui.tabs.JBTabs;
 import com.intellij.util.messages.MessageBus;
-import org.jdesktop.swingx.action.ActionManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
 
-public class IssueSummaryToolWindow implements ToolWindowFactory {
+public class AuditSummaryToolWindow extends RemediationToolWindowBase {
 
-    JLabel messageLabel;
-
-    private JPanel createDetailsContent(){
+    private JPanel createAuditContent(){
         JPanel panel = new JPanel();
-        panel.add(new JLabel("Details go here"));
+        panel.add(new JLabel("Audit content goes here"));
         return panel;
     }
-    private JPanel createRecommendationsContent(){
+    private JPanel createHistoryContent(){
         JPanel panel = new JPanel();
-        panel.add(new JLabel("Recommendations go here"));
+        panel.add(new JLabel("History content goes here"));
         return panel;
     }
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         JPanel panel = new JPanel();
-
         panel.setLayout(new BorderLayout());
 
+        panel.add(headerLabel, BorderLayout.NORTH);
+
         JBTabbedPane tab = new JBTabbedPane();
-        tab.addTab("Details", createDetailsContent());
-        tab.addTab("Recommendations", createRecommendationsContent());
+        tab.addTab("Audit", createAuditContent());
+        tab.addTab("History", createHistoryContent());
 
         panel.add(tab, BorderLayout.CENTER);
 
@@ -77,19 +58,8 @@ public class IssueSummaryToolWindow implements ToolWindowFactory {
             }
             @Override
             public void afterAction(String msg) {
-                System.out.println("Got afterAction message: "+msg);
-                messageLabel.setText(msg);
+                headerLabel.setText(msg);
             }
         });
-    }
-
-    @Override
-    public boolean shouldBeAvailable(@NotNull Project project) {
-        return false;
-    }
-
-    @Override
-    public boolean isDoNotActivateOnStart() {
-        return false;
     }
 }

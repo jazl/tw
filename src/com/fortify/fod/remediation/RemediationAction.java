@@ -1,18 +1,18 @@
-package com.azl;
+package com.fortify.fod.remediation;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-
-import javax.swing.*;
 
 public class RemediationAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent anActionEvent) {
         Project project = anActionEvent.getProject();
+
+        RemediationPluginService service = ServiceManager.getService(RemediationPluginService.class);
+        System.out.println("Got service, project = "+service.getProject());
+
         //ToolWindowManager.getInstance(project).registerToolWindow("Issues",false, ToolWindowAnchor.BOTTOM);
 
 //        ToolWindow analysisResults = ToolWindowManager.getInstance(project).getToolWindow("Analysis Results");

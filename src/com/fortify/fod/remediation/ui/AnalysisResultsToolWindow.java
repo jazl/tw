@@ -1,6 +1,6 @@
-package com.azl;
+package com.fortify.fod.remediation.ui;
 
-import com.intellij.codeInspection.ui.OptionAccessor;
+import com.fortify.fod.remediation.ChangeActionNotifier;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
@@ -11,13 +11,13 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
@@ -29,19 +29,14 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-public class AnalysisResultsToolWindow implements ToolWindowFactory {
+public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
 
     MessageBus messageBus = null;
     ChangeActionNotifier publisher = null;
-
-    public AnalysisResultsToolWindow() {
-    }
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
@@ -65,12 +60,27 @@ public class AnalysisResultsToolWindow implements ToolWindowFactory {
             new FrioritySummary("All",207),
         };
 
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+//        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+//
+//        for(FrioritySummary f:tabs){
+//            Content formContent = contentFactory.createContent(getTreePanel(),String.valueOf(f.issueCount),false);
+//            toolWindow.getContentManager().addContent(formContent);
+//        }
 
-        for(FrioritySummary f:tabs){
-            Content formContent = contentFactory.createContent(getTreePanel(),String.valueOf(f.issueCount),false);
-            toolWindow.getContentManager().addContent(formContent);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+
+        panel.add(headerLabel, BorderLayout.NORTH);
+
+        JBTabbedPane tab = new JBTabbedPane();
+        for(FrioritySummary f:tabs) {
+            tab.add(String.valueOf(f.issueCount),getTreePanel());
         }
+        panel.add(tab,BorderLayout.CENTER);
+
+        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+        Content content = contentFactory.createContent(panel,"",false);
+        toolWindow.getContentManager().addContent(content);
     }
 
     private JPanel getTreePanel() {
@@ -147,19 +157,10 @@ public class AnalysisResultsToolWindow implements ToolWindowFactory {
 
     @Override
     public void init(ToolWindow window) {
+        super.init(window);
         Application application = ApplicationManager.getApplication();
         messageBus = application.getMessageBus();
         publisher = messageBus.syncPublisher(ChangeActionNotifier.CHANGE_ACTION_TOPIC);
-    }
-
-    @Override
-    public boolean shouldBeAvailable(@NotNull Project project) {
-        return false;
-    }
-
-    @Override
-    public boolean isDoNotActivateOnStart() {
-        return false;
     }
 
     private void showFileInEditor() {
@@ -171,7 +172,6 @@ public class AnalysisResultsToolWindow implements ToolWindowFactory {
         LocalFileSystem fileSystem = LocalFileSystem.getInstance();
         OpenFileDescriptor openFileDescriptor = new OpenFileDescriptor(project, testFile);
         int line = openFileDescriptor.getLine();
-        System.out.println("openFileDescriptor.getLine() = "+line);
 
         FileEditorManager fem = FileEditorManager.getInstance(project);
         java.util.List<FileEditor> fileEditors = fem.openEditor(openFileDescriptor, true);
