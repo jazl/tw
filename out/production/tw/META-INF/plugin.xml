@@ -1,7 +1,7 @@
 <idea-plugin>
-  <id>com.your.company.unique.plugin.id</id>
-  <name>Plugin display name here</name>
-  <version>1.0</version>
+  <id>com.hpe.fod.remediation.plugin.prototype</id>
+  <name>Remediation Plugin Prototype</name>
+  <version>0.001</version>
   <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
   <description><![CDATA[
@@ -25,16 +25,17 @@
   -->
 
   <extensions defaultExtensionNs="com.intellij">
-    <toolWindow id="Analysis Results" secondary="true" icon="/icons/plus.png" anchor="left" factoryClass="com.azl.AnalysisResultsToolWindowFactory"/>
-    <toolWindow id="Issue Summary" secondary="false" icon="/icons/plus.png" anchor="right" factoryClass="com.azl.IssueSummaryToolWindowFactory"/>
-    <toolWindow id="Analysis Trace" secondary="false" icon="/icons/plus.png" anchor="bottom" factoryClass="com.azl.AnalysisTraceToolWindowFactory"/>
-    <toolWindow id="Audit Summary" secondary="false" icon="/icons/plus.png" anchor="bottom" factoryClass="com.azl.AuditSummaryToolWindowFactory"/>
+    <applicationService serviceInterface="com.fortify.fod.remediation.RemediationPluginService" serviceImplementation="com.fortify.fod.remediation.RemediationPluginService" />
+    <toolWindow id="Analysis Results" secondary="true" icon="/icons/analysis_results.png" anchor="left" factoryClass="com.fortify.fod.remediation.ui.AnalysisResultsToolWindow"/>
+    <toolWindow id="Issue Summary" secondary="true" icon="/icons/summary.png" anchor="right" factoryClass="com.fortify.fod.remediation.ui.IssueSummaryToolWindow"/>
+    <toolWindow id="Analysis Trace" secondary="true" icon="/icons/issue_details.png" anchor="bottom" factoryClass="com.fortify.fod.remediation.ui.AnalysisTraceToolWindow"/>
+    <toolWindow id="Audit Summary" secondary="true" icon="/icons/summary.png" anchor="bottom" factoryClass="com.fortify.fod.remediation.ui.AuditSummaryToolWindow"/>
   </extensions>
 
   <actions>
-    <group id="com.azl.Toolwindows.group" text="Toolwindows" description="Show Toolwindows" >
+    <group id="com.fortify.Toolwindows.group" text="Fortify" description="Fortify" >
       <add-to-group group-id="MainMenu" anchor="before" relative-to-action="WindowMenu"/>
-      <action id="com.azl.showTw" class="com.azl.ShowTw" text="Show" description="Shows some toolwindows n shit" />
+      <action id="com.fortify.showTw" class="com.fortify.fod.remediation.RemediationAction" text="Open Analysis Results..." description="Open Analysis Results" />
     </group>
     <!-- Add your actions here -->
   </actions>
