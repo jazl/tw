@@ -18,6 +18,8 @@ import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -40,8 +42,7 @@ public class AnalysisTraceToolWindow extends RemediationToolWindowBase {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        JPanel panel = getDefaultToolWindowContentPanel();
 
         panel.add(headerLabel, BorderLayout.NORTH);
 
@@ -82,9 +83,21 @@ public class AnalysisTraceToolWindow extends RemediationToolWindowBase {
     }
 
     @Override
-    protected void onIssueChange(String msg) {
-        headerLabel.setText("!!!:"+msg);
+    public void init(ToolWindow window) {
+        super.init(window);
+        setToolWindowId("Analysis Trace");
     }
+
+    @Override
+    protected void onIssueChange(String msg) {
+        headerLabel.setText(msg);
+    }
+
+    @Override
+    protected void onFoDProjectChange(String msg) {
+
+    }
+
     class TraceItem {
         public String name;
         public String traceType;

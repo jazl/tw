@@ -6,6 +6,7 @@ public interface ChangeActionNotifier {
 
     Topic<ChangeActionNotifier> CHANGE_ACTION_TOPIC = Topic.create("Issue Changed", ChangeActionNotifier.class);
 
-    void beforeAction(String message);
-    void afterAction(String message);
+    void onProjectChanged(String message);
+    void onIssueChanged(String message);
+
 }

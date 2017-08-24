@@ -30,9 +30,7 @@ public class IssueSummaryToolWindow extends RemediationToolWindowBase {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        JPanel panel = new JPanel();
-
-        panel.setLayout(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout(5,5));
 
         panel.add(headerLabel, BorderLayout.NORTH);
 
@@ -41,13 +39,22 @@ public class IssueSummaryToolWindow extends RemediationToolWindowBase {
         tab.addTab("Recommendations", createRecommendationsContent());
         panel.add(tab, BorderLayout.CENTER);
 
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(panel,"",false);
-        toolWindow.getContentManager().addContent(content);
+        addContent(toolWindow, panel);
     }
 
     @Override
     protected void onIssueChange(String msg) {
-        headerLabel.setText("ISSUE SUMMARY:"+msg);
+        headerLabel.setText(msg);
+    }
+
+    @Override
+    protected void onFoDProjectChange(String msg) {
+        toggleContent();
+    }
+
+    @Override
+    public void init(ToolWindow window) {
+        super.init(window);
+        setToolWindowId("Issue Summary");
     }
 }

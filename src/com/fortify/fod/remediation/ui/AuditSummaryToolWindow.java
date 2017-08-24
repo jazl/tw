@@ -4,8 +4,10 @@ import com.fortify.fod.remediation.ChangeActionNotifier;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
@@ -47,7 +49,18 @@ public class AuditSummaryToolWindow extends RemediationToolWindowBase {
     }
 
     @Override
+    public void init(ToolWindow window) {
+        super.init(window);
+        setToolWindowId("Audit Summary");
+    }
+
+    @Override
     protected void onIssueChange(String msg) {
-        headerLabel.setText("AUDIT SUMMARY:"+msg);
+        headerLabel.setText(msg);
+    }
+
+    @Override
+    protected void onFoDProjectChange(String msg) {
+
     }
 }

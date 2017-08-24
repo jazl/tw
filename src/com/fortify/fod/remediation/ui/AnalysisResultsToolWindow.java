@@ -1,8 +1,10 @@
 package com.fortify.fod.remediation.ui;
 
 import com.fortify.fod.remediation.ChangeActionNotifier;
+import com.fortify.fod.remediation.RemediationPluginService;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -11,16 +13,15 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
@@ -36,9 +37,6 @@ import java.util.*;
 import java.util.function.BiConsumer;
 
 public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
-
-    MessageBus messageBus = null;
-    ChangeActionNotifier publisher = null;
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
@@ -71,20 +69,34 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
 //            toolWindow.getContentManager().addContent(formContent);
 //        }
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        JPanel panel = getDefaultToolWindowContentPanel();
 
-        panel.add(headerLabel, BorderLayout.NORTH);
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+        gridBagLayout.rowWeights = new double[]{0.0, 0.0, 1.0};
+        panel.setLayout(gridBagLayout);
+
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+
+        panel.add(headerLabel, gridBagConstraints);
+
+        gridBagConstraints.gridy = gridBagConstraints.gridy+1;
+        gridBagConstraints.anchor = GridBagConstraints.NORTH;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new Insets(0,5,0,5);
+        panel.add(getFilterPanel(), gridBagConstraints);
 
         JBTabbedPane tab = new JBTabbedPane();
         for(FrioritySummary f:tabs) {
             tab.add(String.valueOf(f.issueCount),getTreePanel());
         }
-        panel.add(tab,BorderLayout.CENTER);
+        gridBagConstraints.gridy = gridBagConstraints.gridy+1;
+        panel.add(tab, gridBagConstraints);
 
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(panel,"",false);
-        toolWindow.getContentManager().addContent(content);
+        addContent(toolWindow, panel);
     }
 
     private JPanel getTreePanel() {
@@ -105,13 +117,54 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
                 showFileInEditor();
-                publisher.afterAction(selectedNode.toString());
-
+                remediationPluginService.publishIssueChange(selectedNode.toString());
             }
         });
 
         panel.add(new JBScrollPane(tree), BorderLayout.CENTER);
         return panel;
+    }
+
+    private JPanel getFilterPanel() {
+        JPanel filterPanel = new JPanel();
+
+        GridBagLayout gbl_filterPanel = new GridBagLayout();
+        gbl_filterPanel.columnWidths = new int[]{0, 0, 0, 0};
+        gbl_filterPanel.rowHeights = new int[]{29, 0};
+        gbl_filterPanel.columnWeights = new double[]{0.0, 2.0, 0.0, Double.MIN_VALUE};
+        gbl_filterPanel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+        filterPanel.setLayout(gbl_filterPanel);
+
+        JLabel lblGroupBy = new JLabel("Group By: ");
+        GridBagConstraints gbc_lblGroupBy = new GridBagConstraints();
+        gbc_lblGroupBy.insets = new Insets(0, 0, 0, 5);
+        gbc_lblGroupBy.fill = GridBagConstraints.BOTH;
+        gbc_lblGroupBy.gridx = 0;
+        gbc_lblGroupBy.gridy = 0;
+        filterPanel.add(lblGroupBy, gbc_lblGroupBy);
+
+        JComboBox<String> groupByCombo = new ComboBox<>();
+        DefaultComboBoxModel<String> groupByModel = new DefaultComboBoxModel<>();
+        groupByModel.addElement("analysisType");
+        groupByModel.addElement("assignedUser");
+        groupByModel.addElement("auditPendingAuditorStatus");
+        groupByModel.addElement("auditorStatus");
+        groupByModel.addElement("category");
+        groupByCombo.setModel(groupByModel);
+        GridBagConstraints gbc_comboBox = new GridBagConstraints();
+        gbc_comboBox.insets = new Insets(0, 0, 0, 5);
+        gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
+        gbc_comboBox.gridx = 1;
+        gbc_comboBox.gridy = 0;
+        filterPanel.add(groupByCombo, gbc_comboBox);
+
+        JButton btnNewButton = new JButton("*");
+        GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+        gbc_btnNewButton.gridx = 2;
+        gbc_btnNewButton.gridy = 0;
+        filterPanel.add(btnNewButton, gbc_btnNewButton);
+
+        return filterPanel;
     }
 
     private DefaultMutableTreeNode createCategoryNodeAndChildren(String catNodeName, HashMap<String, ArrayList> vulnerabilities) {
@@ -166,14 +219,17 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
     @Override
     public void init(ToolWindow window) {
         super.init(window);
-        Application application = ApplicationManager.getApplication();
-        messageBus = application.getMessageBus();
-        publisher = messageBus.syncPublisher(ChangeActionNotifier.CHANGE_ACTION_TOPIC);
+        setToolWindowId("Analysis Results");
     }
 
     @Override
     protected void onIssueChange(String msg) {
-        headerLabel.setText(":::"+msg);
+        headerLabel.setText(msg);
+    }
+
+    @Override
+    protected void onFoDProjectChange(String msg) {
+        toggleContent();
     }
 
     private void showFileInEditor() {
