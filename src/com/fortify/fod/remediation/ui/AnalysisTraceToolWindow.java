@@ -69,4 +69,8 @@ public class AnalysisTraceToolWindow extends RemediationToolWindowBase {
         toolWindow.getContentManager().addContent(content);
     }
 
+    @Override
+    protected void onIssueChange(String msg) {
+        headerLabel.setText("!!!:"+msg);
+    }
 }

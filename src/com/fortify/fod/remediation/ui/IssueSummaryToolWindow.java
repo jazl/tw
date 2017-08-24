@@ -45,4 +45,9 @@ public class IssueSummaryToolWindow extends RemediationToolWindowBase {
         Content content = contentFactory.createContent(panel,"",false);
         toolWindow.getContentManager().addContent(content);
     }
+
+    @Override
+    protected void onIssueChange(String msg) {
+        headerLabel.setText("ISSUE SUMMARY:"+msg);
+    }
 }

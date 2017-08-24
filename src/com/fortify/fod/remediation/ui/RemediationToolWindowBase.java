@@ -11,9 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.JLabel;
 
-public class RemediationToolWindowBase implements ToolWindowFactory {
+public abstract class RemediationToolWindowBase implements ToolWindowFactory {
 
-    JLabel headerLabel = new JLabel();;
+    JLabel headerLabel = new JLabel();
 
     public RemediationToolWindowBase() {
         headerLabel.setText("<Select Vulnerability>");
@@ -21,11 +21,15 @@ public class RemediationToolWindowBase implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        // Must override in subclass!
+        System.out.println("in RemediationToolWindowBase createToolWindowContent");
+        // In subclass, call super and implement
     }
 
     @Override
     public void init(ToolWindow window) {
+
+        // If implemented in subclass, call super!!
+
         Application application = ApplicationManager.getApplication();
         MessageBus bus = application.getMessageBus();
 
@@ -36,7 +40,7 @@ public class RemediationToolWindowBase implements ToolWindowFactory {
             }
             @Override
             public void afterAction(String msg) {
-                headerLabel.setText(msg);
+                onIssueChange(msg);
             }
         });
     }
@@ -50,4 +54,7 @@ public class RemediationToolWindowBase implements ToolWindowFactory {
     public boolean isDoNotActivateOnStart() {
         return false;
     }
+
+    protected abstract void onIssueChange(String msg);
+
 }

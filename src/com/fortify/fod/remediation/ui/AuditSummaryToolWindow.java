@@ -47,19 +47,7 @@ public class AuditSummaryToolWindow extends RemediationToolWindowBase {
     }
 
     @Override
-    public void init(ToolWindow window) {
-        Application application = ApplicationManager.getApplication();
-        MessageBus bus = application.getMessageBus();
-
-        bus.connect().subscribe(ChangeActionNotifier.CHANGE_ACTION_TOPIC, new ChangeActionNotifier() {
-            @Override
-            public void beforeAction(String msg) {
-                System.out.println("Got beforeAction message: "+msg);
-            }
-            @Override
-            public void afterAction(String msg) {
-                headerLabel.setText(msg);
-            }
-        });
+    protected void onIssueChange(String msg) {
+        headerLabel.setText("AUDIT SUMMARY:"+msg);
     }
 }

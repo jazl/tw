@@ -40,6 +40,8 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+        super.createToolWindowContent(project, toolWindow);
+        System.out.println("in AnalysisResultsToolWindow createToolWindowContent");
 
         class FrioritySummary {
             public FrioritySummary(String name, int cnt){
@@ -161,6 +163,11 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         Application application = ApplicationManager.getApplication();
         messageBus = application.getMessageBus();
         publisher = messageBus.syncPublisher(ChangeActionNotifier.CHANGE_ACTION_TOPIC);
+    }
+
+    @Override
+    protected void onIssueChange(String msg) {
+        headerLabel.setText(":::"+msg);
     }
 
     private void showFileInEditor() {
