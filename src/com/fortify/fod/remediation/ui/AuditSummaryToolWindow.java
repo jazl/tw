@@ -1,17 +1,13 @@
 package com.fortify.fod.remediation.ui;
 
-import com.fortify.fod.remediation.ChangeActionNotifier;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import com.fortify.fod.remediation.messages.IssueChangeInfo;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.ui.JBSplitter;
+import com.intellij.ui.components.JBList;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
-import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -19,21 +15,80 @@ import java.awt.*;
 
 public class AuditSummaryToolWindow extends RemediationToolWindowBase {
 
+    private JBList<String> historyList = null;
+    private JBList<String> commentList = null;
+
     private JPanel createAuditContent(){
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("Audit content goes here"));
+        JPanel panel = new JPanel(new BorderLayout());
+
+        JBSplitter splitter = new JBSplitter(1.0F);
+        splitter.setFirstComponent(createAuditDetailsPanel());
+        splitter.setSecondComponent(createCommentsPanel());
+        splitter.setProportion(0.5F);
+
+        panel.add(splitter, BorderLayout.CENTER);
+
         return panel;
     }
-    private JPanel createHistoryContent(){
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("History content goes here"));
+
+    private JPanel createAuditDetailsPanel() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        JPanel fieldsPanel = new JPanel();
+        fieldsPanel.setLayout(new BoxLayout(fieldsPanel, BoxLayout.PAGE_AXIS));
+        addAuditDetailField(fieldsPanel, "User", new String[]{""});
+        addAuditDetailField(fieldsPanel, "DeveloperStatus", new String[]{""});
+        addAuditDetailField(fieldsPanel, "AuditorStatus", new String[]{""});
+        addAuditDetailField(fieldsPanel, "Severity", new String[]{""});
+        mainPanel.add(fieldsPanel, BorderLayout.NORTH);
+
+        return mainPanel;
+    }
+
+    private void addAuditDetailField(JPanel panel, String labelText, String[] optionsList) {
+        // TODO: next 3 lines are a hack to work around BoxLayout label alignment weirdness
+        JPanel labelPanel = new JPanel(new BorderLayout());
+        labelPanel.add(new JLabel(labelText), BorderLayout.CENTER);
+        panel.add(labelPanel);
+
+        ComboBox options = new ComboBox(optionsList);
+        panel.add(options);
+    };
+
+    private JPanel createCommentsPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        panel.add(new JLabel("Comments"), BorderLayout.NORTH);
+
+        commentList = new JBList<>();
+        commentList.setModel(getHistory(null));
+        panel.add(new JBScrollPane(commentList), BorderLayout.CENTER);
+
         return panel;
+    }
+
+    private JPanel createHistoryContent(){
+        JPanel panel = new JPanel(new BorderLayout());
+
+        historyList = new JBList<>();
+        historyList.setModel(getHistory(null));
+        panel.add(new JBScrollPane(historyList), BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    private DefaultListModel<String> getHistory(String issueId) {
+        DefaultListModel<String> model = new DefaultListModel<>();
+        String[] history = issueId != null ? remediationPluginService.getHistory(issueId) : new String[]{};
+        for(String h:history) {
+            model.addElement(h);
+        }
+        return model;
     }
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        JPanel panel = getDefaultToolWindowContentPanel();
 
         panel.add(headerLabel, BorderLayout.NORTH);
 
@@ -43,9 +98,7 @@ public class AuditSummaryToolWindow extends RemediationToolWindowBase {
 
         panel.add(tab, BorderLayout.CENTER);
 
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(panel,"",false);
-        toolWindow.getContentManager().addContent(content);
+        addContent(toolWindow, panel);
     }
 
     @Override
@@ -55,12 +108,13 @@ public class AuditSummaryToolWindow extends RemediationToolWindowBase {
     }
 
     @Override
-    protected void onIssueChange(String msg) {
-        headerLabel.setText(msg);
+    protected void onIssueChange(IssueChangeInfo changeInfo) {
+        headerLabel.setText(changeInfo.getIssueName());
+        historyList.setModel(getHistory(changeInfo.getIssueId()));
     }
 
     @Override
     protected void onFoDProjectChange(String msg) {
-
+        toggleContent();
     }
 }

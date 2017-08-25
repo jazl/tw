@@ -1,25 +1,17 @@
 package com.fortify.fod.remediation.ui;
 
-import com.fortify.fod.remediation.ChangeActionNotifier;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import com.fortify.fod.remediation.messages.IssueChangeInfo;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
-import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -49,7 +41,7 @@ public class AnalysisTraceToolWindow extends RemediationToolWindowBase {
         JBList<TraceItem> list = new JBList<>();
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        JLabel label = new JLabel("Test");
+        JLabel label = new JLabel("Abstract");
         label.setIcon(IconLoader.getIcon("/icons/plus.png"));
         panel.add(label, BorderLayout.SOUTH);
 
@@ -77,9 +69,7 @@ public class AnalysisTraceToolWindow extends RemediationToolWindowBase {
         });
         panel.add(new JBScrollPane(list), BorderLayout.CENTER);
 
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(panel,"",false);
-        toolWindow.getContentManager().addContent(content);
+        addContent(toolWindow, panel);
     }
 
     @Override
@@ -89,13 +79,13 @@ public class AnalysisTraceToolWindow extends RemediationToolWindowBase {
     }
 
     @Override
-    protected void onIssueChange(String msg) {
-        headerLabel.setText(msg);
+    protected void onIssueChange(IssueChangeInfo changeInfo) {
+        headerLabel.setText(changeInfo.getIssueName());
     }
 
     @Override
     protected void onFoDProjectChange(String msg) {
-
+        toggleContent();
     }
 
     class TraceItem {

@@ -1,13 +1,13 @@
 package com.fortify.fod.remediation.ui;
 
-import com.fortify.fod.remediation.ChangeActionNotifier;
+import com.fortify.fod.remediation.messages.ChangeActionNotifier;
 import com.fortify.fod.remediation.RemediationPluginService;
+import com.fortify.fod.remediation.messages.IssueChangeInfo;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -17,14 +17,12 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public abstract class RemediationToolWindowBase implements ToolWindowFactory {
 
@@ -72,7 +70,7 @@ public abstract class RemediationToolWindowBase implements ToolWindowFactory {
                 onFoDProjectChange(msg);
             }
             @Override
-            public void onIssueChanged(String msg) {
+            public void onIssueChanged(IssueChangeInfo msg) {
                 onIssueChange(msg);
             }
         });
@@ -93,7 +91,7 @@ public abstract class RemediationToolWindowBase implements ToolWindowFactory {
     }
 
     // Will be called in subclass when selected issue changes
-    protected abstract void onIssueChange(String msg);
+    protected abstract void onIssueChange(IssueChangeInfo changeInfo);
 
     // Will be called in subclass when project selected
     protected abstract void onFoDProjectChange(String msg);
@@ -112,7 +110,6 @@ public abstract class RemediationToolWindowBase implements ToolWindowFactory {
     }
 
     protected void toggleContent() {
-        System.out.println("Toggling content for tool window "+toolWindowId);
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(toolWindowId);
         ContentManager contentManager = toolWindow.getContentManager();
         contentManager.removeAllContents(true);

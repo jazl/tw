@@ -1,10 +1,6 @@
 package com.fortify.fod.remediation.ui;
 
-import com.fortify.fod.remediation.ChangeActionNotifier;
-import com.fortify.fod.remediation.RemediationPluginService;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import com.fortify.fod.remediation.messages.IssueChangeInfo;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -18,12 +14,10 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -158,11 +152,12 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         gbc_comboBox.gridy = 0;
         filterPanel.add(groupByCombo, gbc_comboBox);
 
-        JButton btnNewButton = new JButton("*");
+        JButton optionsButton = new JButton();
+        optionsButton.setIcon(IconLoader.getIcon("/icons/options.png"));
         GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
         gbc_btnNewButton.gridx = 2;
         gbc_btnNewButton.gridy = 0;
-        filterPanel.add(btnNewButton, gbc_btnNewButton);
+        filterPanel.add(optionsButton, gbc_btnNewButton);
 
         return filterPanel;
     }
@@ -223,8 +218,8 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
     }
 
     @Override
-    protected void onIssueChange(String msg) {
-        headerLabel.setText(msg);
+    protected void onIssueChange(IssueChangeInfo changeInfo) {
+        headerLabel.setText(changeInfo.getIssueName());
     }
 
     @Override

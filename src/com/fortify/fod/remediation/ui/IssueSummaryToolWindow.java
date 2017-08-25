@@ -1,15 +1,9 @@
 package com.fortify.fod.remediation.ui;
 
-import com.fortify.fod.remediation.ChangeActionNotifier;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import com.fortify.fod.remediation.messages.IssueChangeInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.components.JBTabbedPane;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
-import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -30,7 +24,7 @@ public class IssueSummaryToolWindow extends RemediationToolWindowBase {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        JPanel panel = new JPanel(new BorderLayout(5,5));
+        JPanel panel = getDefaultToolWindowContentPanel();
 
         panel.add(headerLabel, BorderLayout.NORTH);
 
@@ -43,8 +37,8 @@ public class IssueSummaryToolWindow extends RemediationToolWindowBase {
     }
 
     @Override
-    protected void onIssueChange(String msg) {
-        headerLabel.setText(msg);
+    protected void onIssueChange(IssueChangeInfo changeInfo) {
+        headerLabel.setText(changeInfo.getIssueName());
     }
 
     @Override
