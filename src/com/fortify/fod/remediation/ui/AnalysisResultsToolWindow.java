@@ -66,7 +66,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         JPanel panel = getDefaultToolWindowContentPanel();
 
         GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+        gridBagLayout.columnWeights = new double[]{1.0};
         gridBagLayout.rowWeights = new double[]{0.0, 0.0, 1.0};
         panel.setLayout(gridBagLayout);
 

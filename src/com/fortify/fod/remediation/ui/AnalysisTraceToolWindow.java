@@ -9,6 +9,7 @@ import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
+import net.miginfocom.layout.Grid;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -36,14 +37,25 @@ public class AnalysisTraceToolWindow extends RemediationToolWindowBase {
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         JPanel panel = getDefaultToolWindowContentPanel();
 
-        panel.add(headerLabel, BorderLayout.NORTH);
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        gridBagLayout.columnWeights = new double[]{1.0};
+        gridBagLayout.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0};
+        panel.setLayout(gridBagLayout);
+
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        panel.add(headerLabel, gridBagConstraints);
+
+        JLabel traceLabel = new JLabel("Trace");
+        traceLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gridBagConstraints.gridy = gridBagConstraints.gridy+1;
+        gridBagConstraints.insets = new Insets(5,0,0,0);
+        panel.add(traceLabel , gridBagConstraints);
 
         JBList<TraceItem> list = new JBList<>();
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        JLabel label = new JLabel("Abstract");
-        label.setIcon(IconLoader.getIcon("/icons/plus.png"));
-        panel.add(label, BorderLayout.SOUTH);
 
 //        DefaultListCellRenderer renderer = new DefaultListCellRenderer();
 //        renderer.setIcon(IconLoader.getIcon("/icons/plus.png"));
@@ -67,7 +79,15 @@ public class AnalysisTraceToolWindow extends RemediationToolWindowBase {
                 //gotoLine(Integer.parseInt(lineNum));
             }
         });
-        panel.add(new JBScrollPane(list), BorderLayout.CENTER);
+        gridBagConstraints.gridy = gridBagConstraints.gridy+1;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new Insets(5,0,5,0);
+        panel.add(new JBScrollPane(list), gridBagConstraints);
+
+        JLabel label = new JLabel("Abstract");
+        label.setIcon(IconLoader.getIcon("/icons/plus.png"));
+        gridBagConstraints.gridy = gridBagConstraints.gridy+1;
+        panel.add(label, gridBagConstraints);
 
         addContent(toolWindow, panel);
     }
