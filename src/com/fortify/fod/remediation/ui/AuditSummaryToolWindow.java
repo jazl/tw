@@ -11,6 +11,7 @@ import com.intellij.ui.components.JBTabbedPane;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class AuditSummaryToolWindow extends RemediationToolWindowBase {
@@ -49,16 +50,20 @@ public class AuditSummaryToolWindow extends RemediationToolWindowBase {
         // TODO: next 3 lines are a hack to work around BoxLayout label alignment weirdness
         JPanel labelPanel = new JPanel(new BorderLayout());
         labelPanel.add(new JLabel(labelText), BorderLayout.CENTER);
+        labelPanel.setBorder(new EmptyBorder(new Insets(5,0,5,0)));
         panel.add(labelPanel);
 
         ComboBox options = new ComboBox(optionsList);
+        //options.setBorder(new EmptyBorder(new Insets(0,0,10,0)));
         panel.add(options);
     };
 
     private JPanel createCommentsPanel() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        panel.add(new JLabel("Comments"), BorderLayout.NORTH);
+        JLabel commentsLabel = new JLabel("Comments");
+        commentsLabel.setBorder(new EmptyBorder(new Insets(5,0,5,0)));
+        panel.add(commentsLabel, BorderLayout.NORTH);
 
         commentList = new JBList<>();
         commentList.setModel(getHistory(null));

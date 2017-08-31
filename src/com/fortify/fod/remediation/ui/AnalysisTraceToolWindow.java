@@ -1,12 +1,14 @@
 package com.fortify.fod.remediation.ui;
 
 import com.fortify.fod.remediation.messages.IssueChangeInfo;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.ui.HideableTitledPanel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import net.miginfocom.layout.Grid;
@@ -18,6 +20,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
 public class AnalysisTraceToolWindow extends RemediationToolWindowBase {
+
+    private final String abstractText = "<html><h3>Unreleased Resource: Unmanaged Object (controlflow)</h3>" +
+        "The function <b>printButton_Click()</b> in <b>Form1.cs</b> fails to properly dispose of unmanaged system resources allocated by <b>PrintDocument()</b> on line <b>34</b>." +
+        "The program fails to dispose of a managed object that utilizes unmanaged system resources.</html>";
 
     private void gotoLine(int lineNumber) {
 
@@ -48,11 +54,8 @@ public class AnalysisTraceToolWindow extends RemediationToolWindowBase {
         gridBagConstraints.gridy = 0;
         panel.add(headerLabel, gridBagConstraints);
 
-        JLabel traceLabel = new JLabel("Trace");
-        traceLabel.setHorizontalAlignment(SwingConstants.CENTER);
         gridBagConstraints.gridy = gridBagConstraints.gridy+1;
-        gridBagConstraints.insets = new Insets(5,0,0,0);
-        panel.add(traceLabel , gridBagConstraints);
+        panel.add(getTraceNavigationPanel(), gridBagConstraints);
 
         JBList<TraceItem> list = new JBList<>();
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -84,12 +87,32 @@ public class AnalysisTraceToolWindow extends RemediationToolWindowBase {
         gridBagConstraints.insets = new Insets(5,0,5,0);
         panel.add(new JBScrollPane(list), gridBagConstraints);
 
-        JLabel label = new JLabel("Abstract");
-        label.setIcon(IconLoader.getIcon("/icons/plus.png"));
         gridBagConstraints.gridy = gridBagConstraints.gridy+1;
-        panel.add(label, gridBagConstraints);
+        JLabel abstractLabel = new JLabel(abstractText);
+        HideableTitledPanel hideableTitledPanel = new HideableTitledPanel("Abstract", abstractLabel, false);
+        panel.add(hideableTitledPanel, gridBagConstraints);
 
         addContent(toolWindow, panel);
+    }
+
+    private JPanel getTraceNavigationPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        Dimension navDimension = new Dimension(35,24);
+
+        JButton navPrevButton = new JButton(AllIcons.Actions.Left);
+        navPrevButton.setPreferredSize(navDimension);
+        panel.add(navPrevButton, BorderLayout.WEST);
+
+        JLabel traceLabel = new JLabel("Trace: Multiple Paths (1 of n)");
+        traceLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(traceLabel, BorderLayout.CENTER);
+
+        JButton navNextButton = new JButton(AllIcons.Actions.Right);
+        navNextButton.setPreferredSize(navDimension);
+        panel.add(navNextButton , BorderLayout.EAST);
+
+        return panel;
     }
 
     @Override

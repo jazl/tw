@@ -1,6 +1,8 @@
 package com.fortify.fod.remediation.ui;
 
 import com.fortify.fod.remediation.messages.IssueChangeInfo;
+import com.intellij.execution.Executor;
+import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -10,24 +12,31 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.ui.JBPopupMenu;
+import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.treeStructure.Tree;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
@@ -35,7 +44,6 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         super.createToolWindowContent(project, toolWindow);
-        System.out.println("in AnalysisResultsToolWindow createToolWindowContent");
 
         class FrioritySummary {
             public FrioritySummary(String name, int cnt){
@@ -56,14 +64,21 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
             new FrioritySummary("All",207),
         };
 
-//        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-//
-//        for(FrioritySummary f:tabs){
-//            Content formContent = contentFactory.createContent(getTreePanel(),String.valueOf(f.issueCount),false);
-//            toolWindow.getContentManager().addContent(formContent);
-//        }
-
         JPanel panel = getDefaultToolWindowContentPanel();
+
+        panel.add(headerLabel, BorderLayout.NORTH);
+
+        JBTabbedPane tab = new JBTabbedPane();
+        for(FrioritySummary f:tabs) {
+            tab.add(String.valueOf(f.issueCount), getTabContents());
+        }
+        panel.add(tab, BorderLayout.CENTER);
+
+        addContent(toolWindow, panel);
+    }
+
+    private JPanel getTabContents() {
+        JPanel panel = new JPanel();
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.columnWeights = new double[]{1.0};
@@ -74,29 +89,24 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        JLabel folderLabel = new JLabel("High (44)");
+        folderLabel.setBackground(Color.ORANGE);
+        folderLabel.setOpaque(true);
+        folderLabel.setBorder(new EmptyBorder(new Insets(5,5,5,0)));
+        panel.add(folderLabel, gridBagConstraints);
 
-        panel.add(headerLabel, gridBagConstraints);
+        gridBagConstraints.gridy = gridBagConstraints.gridy+1;
+        panel.add(getFilterPanel(), gridBagConstraints);
 
         gridBagConstraints.gridy = gridBagConstraints.gridy+1;
         gridBagConstraints.anchor = GridBagConstraints.NORTH;
         gridBagConstraints.fill = GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new Insets(0,5,0,5);
-        panel.add(getFilterPanel(), gridBagConstraints);
+        panel.add(getTree(), gridBagConstraints);
 
-        JBTabbedPane tab = new JBTabbedPane();
-        for(FrioritySummary f:tabs) {
-            tab.add(String.valueOf(f.issueCount),getTreePanel());
-        }
-        gridBagConstraints.gridy = gridBagConstraints.gridy+1;
-        panel.add(tab, gridBagConstraints);
-
-        addContent(toolWindow, panel);
+        return panel;
     }
 
-    private JPanel getTreePanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-
+    private JBScrollPane getTree() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
         createNodes(root);
         Tree tree = new Tree(root);
@@ -115,8 +125,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
             }
         });
 
-        panel.add(new JBScrollPane(tree), BorderLayout.CENTER);
-        return panel;
+        return new JBScrollPane(tree);
     }
 
     private JPanel getFilterPanel() {
@@ -154,6 +163,35 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
 
         JButton optionsButton = new JButton();
         optionsButton.setIcon(IconLoader.getIcon("/icons/options.png"));
+        optionsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                JBPopupMenu menu = new JBPopupMenu();
+//                menu.setInvoker(optionsButton);
+//                menu.add("Show suppressed");
+//                menu.add("Show fixed");
+//                menu.setVisible(true);
+
+
+                JBList<String> list = new JBList<>();
+                DefaultListModel<String> listModel = new DefaultListModel<>();
+                listModel.addElement("Option 1");
+                listModel.addElement("Option 2");
+                list.setModel(listModel);
+                JBPopupFactory.getInstance().createListPopupBuilder(list)
+                        .setMovable(false)
+                        .setResizable(false)
+                        .setRequestFocus(true)
+                        .setItemChoosenCallback(() -> {
+                            final Object value = list.getSelectedValue();
+                            System.out.println("got value = "+value);
+                            if (value instanceof Executor) {
+                            }
+                        }).createPopup().showUnderneathOf(optionsButton);
+
+            }
+        });
+
         GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
         gbc_btnNewButton.gridx = 2;
         gbc_btnNewButton.gridy = 0;
