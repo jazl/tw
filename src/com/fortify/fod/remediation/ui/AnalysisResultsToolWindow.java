@@ -1,5 +1,7 @@
 package com.fortify.fod.remediation.ui;
 
+import com.fortify.fod.remediation.custom.GroupTreeItem;
+import com.fortify.fod.remediation.custom.VulnNodeCellRender;
 import com.fortify.fod.remediation.messages.IssueChangeInfo;
 import com.fortify.fod.remediation.models.VulnFolder;
 import com.intellij.execution.Executor;
@@ -20,7 +22,6 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.treeStructure.Tree;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +30,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -106,9 +106,11 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         issuesTree = new Tree(treeModel);
         issuesTree.setRootVisible(false);
 
-        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
-        renderer.setLeafIcon(IconLoader.getIcon("/icons/trace/Generic.png"));
-        issuesTree.setCellRenderer(renderer);
+        //DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+        //renderer.setLeafIcon(IconLoader.getIcon("/icons/trace/Generic.png"));
+
+        VulnNodeCellRender r = new VulnNodeCellRender();
+        issuesTree.setCellRenderer(r);
 
         issuesTree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
@@ -197,21 +199,23 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         return filterPanel;
     }
 
-    private DefaultMutableTreeNode createCategoryNodeAndChildren(String catNodeName, HashMap<String, ArrayList> vulnerabilities) {
-        final DefaultMutableTreeNode catNode = new DefaultMutableTreeNode(catNodeName);
+    private DefaultMutableTreeNode createGruopingNodeAndChildren(String groupingNodeName, HashMap<String, ArrayList> vulnerabilities) {
+        final DefaultMutableTreeNode groupingNode = new DefaultMutableTreeNode(groupingNodeName);
+        groupingNode.setUserObject(new GroupTreeItem(groupingNodeName, groupingNodeName));
 
         vulnerabilities.forEach(new BiConsumer<String, ArrayList>() {
             @Override
             public void accept(String vulnName, ArrayList traces) {
+
                 DefaultMutableTreeNode vulnNodes = new DefaultMutableTreeNode(vulnName);
                 for(int i=0; i<traces.size(); i++) {
                     vulnNodes.add(new DefaultMutableTreeNode(traces.get(i)));
                 }
-                catNode.add(vulnNodes);
+                groupingNode.add(vulnNodes);
             }
         });
 
-        return catNode;
+        return groupingNode;
     }
 
     private void createNodes(DefaultMutableTreeNode root, int hashCode) {
@@ -225,7 +229,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
         vulnerabilities = new HashMap<>();
         vulnerabilities.put("Exec.java:103", traceNodes);
-        root.add(createCategoryNodeAndChildren("Command Injection (3) - "+hashCode, vulnerabilities));
+        root.add(createGruopingNodeAndChildren("Command Injection (3) - "+hashCode, vulnerabilities));
 
         traceNodes = new ArrayList<>();
         traceNodes.add("ParameterParser.java:593 - getParameterValues(return)");
@@ -233,17 +237,17 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
         vulnerabilities = new HashMap<>();
         vulnerabilities.put("Exec.java:103", traceNodes);
-        root.add(createCategoryNodeAndChildren("Cookie Security: Cookie not Sent Over SSL (2) - "+hashCode, vulnerabilities));
+        root.add(createGruopingNodeAndChildren("Cookie Security: Cookie not Sent Over SSL (2) - "+hashCode, vulnerabilities));
 
-        root.add(createCategoryNodeAndChildren("Log Forging (2)", vulnerabilities));
-        root.add(createCategoryNodeAndChildren("Null Reference(2)", vulnerabilities));
-        root.add(createCategoryNodeAndChildren("Null Reference(107)", vulnerabilities));
-        root.add(createCategoryNodeAndChildren("Password Management: Empty Password (3)", vulnerabilities));
-        root.add(createCategoryNodeAndChildren("Password Management: Hardcoded Password (13)", vulnerabilities));
-        root.add(createCategoryNodeAndChildren("Password Management: Password in Configuration File (1)", vulnerabilities));
-        root.add(createCategoryNodeAndChildren("Privacy Violation (18)", vulnerabilities));
-        root.add(createCategoryNodeAndChildren("SQL Injection (11)", vulnerabilities));
-        root.add(createCategoryNodeAndChildren("Weak Encryption (4)", vulnerabilities));
+        root.add(createGruopingNodeAndChildren("Log Forging (2)", vulnerabilities));
+        root.add(createGruopingNodeAndChildren("Null Reference(2)", vulnerabilities));
+        root.add(createGruopingNodeAndChildren("Null Reference(107)", vulnerabilities));
+        root.add(createGruopingNodeAndChildren("Password Management: Empty Password (3)", vulnerabilities));
+        root.add(createGruopingNodeAndChildren("Password Management: Hardcoded Password (13)", vulnerabilities));
+        root.add(createGruopingNodeAndChildren("Password Management: Password in Configuration File (1)", vulnerabilities));
+        root.add(createGruopingNodeAndChildren("Privacy Violation (18)", vulnerabilities));
+        root.add(createGruopingNodeAndChildren("SQL Injection (11)", vulnerabilities));
+        root.add(createGruopingNodeAndChildren("Weak Encryption (4)", vulnerabilities));
 
     }
 
