@@ -1,6 +1,9 @@
 package com.fortify.fod.remediation.custom;
 
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.GroupedElementsRenderer;
+
+import javax.swing.*;
 
 /**
  * Created by jazl on 9/2/2017.
@@ -29,4 +32,25 @@ public class GroupTreeItem extends TreeNodeBase {
     public String getLabel() {
         return "group::"+label;
     }
+
+    @Override
+    public Icon getIcon() {
+        return IconLoader.getIcon("/icons/folder-yellow.png");
+    }
+
+    @Override
+    public Icon getOpenIcon() {
+        return getIcon();
+    }
+
+    @Override
+    public Icon getClosedIcon() {
+        return getIcon();
+    }
+
+    @Override
+    public String toString() {
+        return getLabel();
+    }
+
 }

@@ -7,13 +7,15 @@ import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
 
 public class VulnNodeCellRender implements TreeCellRenderer {
-    JLabel renderer = new JLabel();
-    DefaultTreeCellRenderer defaultRenderer = new DefaultTreeCellRenderer();
+    private final boolean useCustomRenderer = false; // TODO: for debugging
+
+    private JLabel renderer = new JLabel();
+    private DefaultTreeCellRenderer defaultRenderer = new DefaultTreeCellRenderer();
 
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         Component returnValue = null;
-        if ((value != null) && (value instanceof DefaultMutableTreeNode)) {
+        if (useCustomRenderer && ((value != null) && (value instanceof DefaultMutableTreeNode))) {
             Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
             if (userObject instanceof GroupTreeItem) {
                 GroupTreeItem uo = (GroupTreeItem) userObject;
@@ -24,6 +26,13 @@ public class VulnNodeCellRender implements TreeCellRenderer {
                     renderer.setBackground(defaultRenderer.getBackgroundNonSelectionColor());
                 }
                 renderer.setEnabled(tree.isEnabled());
+                Icon icon = uo.getIcon();
+                if(icon != null) {
+                    renderer.setIcon(expanded ? uo.getClosedIcon() : uo.getOpenIcon());
+                }
+                else {
+                    renderer.setIcon(expanded ? defaultRenderer.getClosedIcon() : defaultRenderer.getOpenIcon());
+                }
                 returnValue = renderer;
             }
         }
