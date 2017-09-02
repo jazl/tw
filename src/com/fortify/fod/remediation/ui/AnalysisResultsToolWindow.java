@@ -40,7 +40,7 @@ import java.util.function.BiConsumer;
 
 public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
 
-    private JBTabbedPane tabbedPane;
+    private VulnTabbedPane tabbedPane;
     private Tree issuesTree;
 
     @Override
@@ -61,7 +61,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
 
         panel.add(headerLabel, BorderLayout.NORTH);
 
-        tabbedPane = new JBTabbedPane();
+        tabbedPane = new VulnTabbedPane();
         for(VulnFolder f:folders) {
             Component component = tabbedPane.add(f.getTitle(), getTabContents());
         }
