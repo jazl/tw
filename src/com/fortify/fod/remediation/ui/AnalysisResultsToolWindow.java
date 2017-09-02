@@ -1,8 +1,8 @@
 package com.fortify.fod.remediation.ui;
 
 import com.fortify.fod.remediation.messages.IssueChangeInfo;
+import com.fortify.fod.remediation.models.VulnFolder;
 import com.intellij.execution.Executor;
-import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -12,7 +12,6 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -31,48 +30,42 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.*;
-import java.util.List;
 import java.util.function.BiConsumer;
 
 public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
+
+    private JBTabbedPane tabbedPane;
+    private Tree issuesTree;
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         super.createToolWindowContent(project, toolWindow);
 
-        class FrioritySummary {
-            public FrioritySummary(String name, int cnt){
-                this.friorityName = name;
-                this.issueCount = cnt;
-            }
-            public String friorityName;
-            public int issueCount;
-            public Image priorityImage;
-        }
         // Webgoat
-        FrioritySummary[] tabs = new FrioritySummary[]{
-            new FrioritySummary("Critical",44),
-            new FrioritySummary("High",156),
-            new FrioritySummary("Medium",1),
-            new FrioritySummary("Low",1),
-            new FrioritySummary("Info",2),
-            new FrioritySummary("All",207),
+        VulnFolder[] folders = new VulnFolder[]{
+            new VulnFolder("Critical","Critical"),
+            new VulnFolder("High","High"),
+            new VulnFolder("Medium","Medium"),
+            new VulnFolder("Low","Low"),
+            new VulnFolder("Info","Info"),
+            new VulnFolder("All","All")
         };
 
         JPanel panel = getDefaultToolWindowContentPanel();
 
         panel.add(headerLabel, BorderLayout.NORTH);
 
-        JBTabbedPane tab = new JBTabbedPane();
-        for(FrioritySummary f:tabs) {
-            tab.add(String.valueOf(f.issueCount), getTabContents());
+        tabbedPane = new JBTabbedPane();
+        for(VulnFolder f:folders) {
+            Component component = tabbedPane.add(f.getTitle(), getTabContents());
         }
-        panel.add(tab, BorderLayout.CENTER);
+        panel.add(tabbedPane, BorderLayout.CENTER);
 
         addContent(toolWindow, panel);
     }
@@ -108,24 +101,25 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
 
     private JBScrollPane getTree() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-        createNodes(root);
-        Tree tree = new Tree(root);
-        tree.setRootVisible(false);
+        DefaultTreeModel treeModel = new DefaultTreeModel(root);
+        createNodes(root, treeModel.hashCode());
+        issuesTree = new Tree(treeModel);
+        issuesTree.setRootVisible(false);
 
         DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
         renderer.setLeafIcon(IconLoader.getIcon("/icons/trace/Generic.png"));
-        tree.setCellRenderer(renderer);
+        issuesTree.setCellRenderer(renderer);
 
-        tree.addTreeSelectionListener(new TreeSelectionListener() {
+        issuesTree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
-                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)issuesTree.getLastSelectedPathComponent();
                 showFileInEditor();
                 remediationPluginService.publishIssueChange(selectedNode.toString());
             }
         });
 
-        return new JBScrollPane(tree);
+        return new JBScrollPane(issuesTree);
     }
 
     private JPanel getFilterPanel() {
@@ -175,7 +169,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
 
                 JBList<String> list = new JBList<>();
                 DefaultListModel<String> listModel = new DefaultListModel<>();
-                listModel.addElement("Option 1");
+                listModel.addElement("Change issues tree");
                 listModel.addElement("Option 2");
                 list.setModel(listModel);
                 JBPopupFactory.getInstance().createListPopupBuilder(list)
@@ -185,6 +179,9 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
                         .setItemChoosenCallback(() -> {
                             final Object value = list.getSelectedValue();
                             System.out.println("got value = "+value);
+                            if ("Change issues tree".equals(value)) {
+                                changeIssuesTree();
+                            }
                             if (value instanceof Executor) {
                             }
                         }).createPopup().showUnderneathOf(optionsButton);
@@ -217,7 +214,8 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         return catNode;
     }
 
-    private void createNodes(DefaultMutableTreeNode root) {
+    private void createNodes(DefaultMutableTreeNode root, int hashCode) {
+
         HashMap<String, ArrayList> vulnerabilities;
         ArrayList<String> traceNodes;
 
@@ -227,7 +225,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
         vulnerabilities = new HashMap<>();
         vulnerabilities.put("Exec.java:103", traceNodes);
-        root.add(createCategoryNodeAndChildren("Command Injection (3)", vulnerabilities));
+        root.add(createCategoryNodeAndChildren("Command Injection (3) - "+hashCode, vulnerabilities));
 
         traceNodes = new ArrayList<>();
         traceNodes.add("ParameterParser.java:593 - getParameterValues(return)");
@@ -235,7 +233,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
         vulnerabilities = new HashMap<>();
         vulnerabilities.put("Exec.java:103", traceNodes);
-        root.add(createCategoryNodeAndChildren("Cookie Security: Cookie not Sent Over SSL (2)", vulnerabilities));
+        root.add(createCategoryNodeAndChildren("Cookie Security: Cookie not Sent Over SSL (2) - "+hashCode, vulnerabilities));
 
         root.add(createCategoryNodeAndChildren("Log Forging (2)", vulnerabilities));
         root.add(createCategoryNodeAndChildren("Null Reference(2)", vulnerabilities));
@@ -305,4 +303,14 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         //fem.openFile(vf, true   );
     }
 
+    private void changeIssuesTree() {
+        DefaultTreeModel treeModel = (DefaultTreeModel)issuesTree.getModel();
+        int i = treeModel.hashCode();
+        System.out.println("Changing issues tree with mode hashCode "+i);
+
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
+        root.removeAllChildren();
+        treeModel.reload();
+        System.out.println("Removed all children!!");
+    }
 }
