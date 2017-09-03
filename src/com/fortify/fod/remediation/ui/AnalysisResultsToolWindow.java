@@ -1,10 +1,13 @@
 package com.fortify.fod.remediation.ui;
 
 import com.fortify.fod.remediation.custom.GroupTreeItem;
+import com.fortify.fod.remediation.custom.IssueTreeItem;
 import com.fortify.fod.remediation.custom.VulnNodeCellRender;
 import com.fortify.fod.remediation.messages.IssueChangeInfo;
 import com.fortify.fod.remediation.models.VulnFolder;
 import com.intellij.execution.Executor;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.ToggleAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -14,6 +17,9 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.ui.JBCheckboxMenuItem;
+import com.intellij.openapi.ui.JBPopupMenu;
+import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -21,16 +27,22 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.components.JBList;
+import com.intellij.ui.components.JBMenu;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.ExpandVetoException;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -112,12 +124,29 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         VulnNodeCellRender r = new VulnNodeCellRender();
         issuesTree.setCellRenderer(r);
 
+        issuesTree.addTreeWillExpandListener(new TreeWillExpandListener() {
+            @Override
+            public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
+                TreePath path = event.getPath();
+                //DefaultMutableTreeNode source = (DefaultMutableTreeNode)event.getSource();
+                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)issuesTree.getLastSelectedPathComponent();
+                DefaultMutableTreeNode lastPathComponent = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
+                System.out.println("TreeWillExpandListener, treeWillExpand, "+lastPathComponent.toString());
+            }
+
+            @Override
+            public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+
+            }
+        });
         issuesTree.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
             public void valueChanged(TreeSelectionEvent e) {
-                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)issuesTree.getLastSelectedPathComponent();
-                showFileInEditor();
-                remediationPluginService.publishIssueChange(selectedNode.toString());
+                DefaultMutableTreeNode lastPathComponent = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
+                Object userObject = lastPathComponent.getUserObject();
+                System.out.println("TreeSelectionListener, valueChanged on "+userObject.getClass().getTypeName()+", "+lastPathComponent.toString());
+                //showFileInEditor();
+                //remediationPluginService.publishIssueChange(selectedNode.toString());
             }
         });
 
@@ -162,32 +191,16 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         optionsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                JBPopupMenu menu = new JBPopupMenu();
-//                menu.setInvoker(optionsButton);
-//                menu.add("Show suppressed");
-//                menu.add("Show fixed");
+                createPopupList(optionsButton);
+                //createPopupMenu(optionsButton);
+                //createCheckboxPopupMenu(optionsButton);
+
+//                JBMenu menu = new JBMenu();
+//                menu.add(new JBCheckboxMenuItem("Test 1"));
+//                menu.add(new JBCheckboxMenuItem("Test 2"));
 //                menu.setVisible(true);
-
-
-                JBList<String> list = new JBList<>();
-                DefaultListModel<String> listModel = new DefaultListModel<>();
-                listModel.addElement("Change issues tree");
-                listModel.addElement("Option 2");
-                list.setModel(listModel);
-                JBPopupFactory.getInstance().createListPopupBuilder(list)
-                        .setMovable(false)
-                        .setResizable(false)
-                        .setRequestFocus(true)
-                        .setItemChoosenCallback(() -> {
-                            final Object value = list.getSelectedValue();
-                            System.out.println("got value = "+value);
-                            if ("Change issues tree".equals(value)) {
-                                changeIssuesTree();
-                            }
-                            if (value instanceof Executor) {
-                            }
-                        }).createPopup().showUnderneathOf(optionsButton);
-
+//
+//
             }
         });
 
@@ -199,19 +212,71 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         return filterPanel;
     }
 
-    private DefaultMutableTreeNode createGruopingNodeAndChildren(String groupingNodeName, HashMap<String, ArrayList> vulnerabilities) {
+    private void createPopupMenu(Component invoker){
+        JBPopupMenu menu = new JBPopupMenu();
+        menu.setInvoker(invoker);
+        menu.setLocation(invoker.getX(), invoker.getY());
+        menu.add("Show suppressed");
+        menu.add("Show fixed");
+        menu.setVisible(true);
+    }
+
+    private void createCheckboxPopupMenu(Component invoker){
+        JPopupMenu menu = new JPopupMenu();
+        menu.setInvoker(invoker);
+        Rectangle bounds = invoker.getBounds();
+        menu.setLocation(invoker.getX(), bounds.y);
+        menu.add(new JCheckBoxMenuItem("option 1"));
+        menu.add(new JCheckBoxMenuItem("option 2"));
+        menu.setVisible(true);
+    }
+
+    private void createPopupList(Component parentCtrl) {
+//        JBList<TestAction> list = new JBList<>();
+//        DefaultListModel<TestAction> listModel = new DefaultListModel<>();
+//        listModel.addElement(new TestAction("Test 1", "", null));
+//        listModel.addElement(new TestAction("Test 2", "", null));
+//        list.setModel(listModel);
+
+        JBList<String> list = new JBList<>();
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        listModel.addElement("Option 1");
+        listModel.addElement("Option 2");
+        list.setModel(listModel);
+
+        list.setCellRenderer(new ToggleMenuItemCellRenderer());
+
+        JBPopupFactory.getInstance().createListPopupBuilder(list)
+            .setMovable(false)
+            .setResizable(false)
+            .setRequestFocus(true)
+            .setItemChoosenCallback(() -> {
+                //final TestAction value = (TestAction)list.getSelectedValue();
+                //System.out.println("got value = "+value);
+                //value.setSelected(null,true);
+//                if ("Change issues tree".equals(value)) {
+//                    changeIssuesTree();
+//                }
+//                if (value instanceof Executor) {
+//                }
+            }).createPopup().showUnderneathOf(parentCtrl);
+    }
+
+    private DefaultMutableTreeNode createGroupingNodeAndChildren(String groupingNodeName, HashMap<String, ArrayList> issues) {
         final DefaultMutableTreeNode groupingNode = new DefaultMutableTreeNode(groupingNodeName);
         groupingNode.setUserObject(new GroupTreeItem(groupingNodeName, groupingNodeName));
 
-        vulnerabilities.forEach(new BiConsumer<String, ArrayList>() {
+        issues.forEach(new BiConsumer<String, ArrayList>() {
             @Override
-            public void accept(String vulnName, ArrayList traces) {
+            public void accept(String issueName, ArrayList traces) {
 
-                DefaultMutableTreeNode vulnNodes = new DefaultMutableTreeNode(vulnName);
+                DefaultMutableTreeNode issueNode = new DefaultMutableTreeNode(issueName);
+                issueNode.setUserObject(new IssueTreeItem(issueName, issueName));
+
                 for(int i=0; i<traces.size(); i++) {
-                    vulnNodes.add(new DefaultMutableTreeNode(traces.get(i)));
+                    issueNode.add(new DefaultMutableTreeNode(traces.get(i)));
                 }
-                groupingNode.add(vulnNodes);
+                groupingNode.add(issueNode);
             }
         });
 
@@ -220,34 +285,34 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
 
     private void createNodes(DefaultMutableTreeNode root, int hashCode) {
 
-        HashMap<String, ArrayList> vulnerabilities;
+        HashMap<String, ArrayList> issues;
         ArrayList<String> traceNodes;
 
         traceNodes = new ArrayList<>();
         traceNodes.add("ParameterParser.java:593 - getParameterValues(return)");
         traceNodes.add("ParameterParser.java:593 - Return");
         traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
-        vulnerabilities = new HashMap<>();
-        vulnerabilities.put("Exec.java:103", traceNodes);
-        root.add(createGruopingNodeAndChildren("Command Injection (3) - "+hashCode, vulnerabilities));
+        issues = new HashMap<>();
+        issues.put("Exec.java:103", traceNodes);
+        root.add(createGroupingNodeAndChildren("Command Injection (3) - "+hashCode, issues));
 
         traceNodes = new ArrayList<>();
         traceNodes.add("ParameterParser.java:593 - getParameterValues(return)");
         traceNodes.add("ParameterParser.java:593 - Return");
         traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
-        vulnerabilities = new HashMap<>();
-        vulnerabilities.put("Exec.java:103", traceNodes);
-        root.add(createGruopingNodeAndChildren("Cookie Security: Cookie not Sent Over SSL (2) - "+hashCode, vulnerabilities));
+        issues = new HashMap<>();
+        issues.put("Exec.java:103", traceNodes);
+        root.add(createGroupingNodeAndChildren("Cookie Security: Cookie not Sent Over SSL (2) - "+hashCode, issues));
 
-        root.add(createGruopingNodeAndChildren("Log Forging (2)", vulnerabilities));
-        root.add(createGruopingNodeAndChildren("Null Reference(2)", vulnerabilities));
-        root.add(createGruopingNodeAndChildren("Null Reference(107)", vulnerabilities));
-        root.add(createGruopingNodeAndChildren("Password Management: Empty Password (3)", vulnerabilities));
-        root.add(createGruopingNodeAndChildren("Password Management: Hardcoded Password (13)", vulnerabilities));
-        root.add(createGruopingNodeAndChildren("Password Management: Password in Configuration File (1)", vulnerabilities));
-        root.add(createGruopingNodeAndChildren("Privacy Violation (18)", vulnerabilities));
-        root.add(createGruopingNodeAndChildren("SQL Injection (11)", vulnerabilities));
-        root.add(createGruopingNodeAndChildren("Weak Encryption (4)", vulnerabilities));
+        root.add(createGroupingNodeAndChildren("Log Forging (2)", issues));
+        root.add(createGroupingNodeAndChildren("Null Reference(2)", issues));
+        root.add(createGroupingNodeAndChildren("Null Reference(107)", issues));
+        root.add(createGroupingNodeAndChildren("Password Management: Empty Password (3)", issues));
+        root.add(createGroupingNodeAndChildren("Password Management: Hardcoded Password (13)", issues));
+        root.add(createGroupingNodeAndChildren("Password Management: Password in Configuration File (1)", issues));
+        root.add(createGroupingNodeAndChildren("Privacy Violation (18)", issues));
+        root.add(createGroupingNodeAndChildren("SQL Injection (11)", issues));
+        root.add(createGroupingNodeAndChildren("Weak Encryption (4)", issues));
 
     }
 
@@ -316,5 +381,34 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         root.removeAllChildren();
         treeModel.reload();
         System.out.println("Removed all children!!");
+    }
+
+    class TestAction extends ToggleAction {
+
+        public TestAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+            super(text, description, icon);
+        }
+
+        @Override
+        public boolean isSelected(AnActionEvent anActionEvent) {
+            return true;
+        }
+
+        @Override
+        public void setSelected(AnActionEvent anActionEvent, boolean b) {
+
+            System.out.println("set selected?");
+        }
+    }
+
+    class ToggleMenuItemCellRenderer implements ListCellRenderer {
+
+        JBCheckboxMenuItem renderer = new JBCheckboxMenuItem();
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            renderer.setText(String.valueOf(value)+"...");
+            //renderer.setIcon(IconLoader.getIcon("/icons/trace/Generic.png"));
+            return renderer;
+        }
     }
 }
