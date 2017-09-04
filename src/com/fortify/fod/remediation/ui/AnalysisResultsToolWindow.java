@@ -8,6 +8,7 @@ import com.fortify.fod.remediation.models.VulnFolder;
 import com.intellij.execution.Executor;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -32,6 +33,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.sonatype.nexus.index.treeview.DefaultTreeNode;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -47,13 +49,19 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.List;
+import java.util.Timer;
 import java.util.function.BiConsumer;
 
 public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
 
     private VulnTabbedPane tabbedPane;
+    private DefaultTreeModel treeModel;
     private Tree issuesTree;
+
+    private static int counter = 0;
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
@@ -113,7 +121,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
 
     private JBScrollPane getTree() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-        DefaultTreeModel treeModel = new DefaultTreeModel(root);
+        treeModel = new DefaultTreeModel(root);
         createNodes(root, treeModel.hashCode());
         issuesTree = new Tree(treeModel);
         issuesTree.setRootVisible(false);
@@ -127,11 +135,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         issuesTree.addTreeWillExpandListener(new TreeWillExpandListener() {
             @Override
             public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
-                TreePath path = event.getPath();
-                //DefaultMutableTreeNode source = (DefaultMutableTreeNode)event.getSource();
-                DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)issuesTree.getLastSelectedPathComponent();
-                DefaultMutableTreeNode lastPathComponent = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
-                System.out.println("TreeWillExpandListener, treeWillExpand, "+lastPathComponent.toString());
+                handleTreeWillExpand(event);
             }
 
             @Override
@@ -263,7 +267,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
     }
 
     private DefaultMutableTreeNode createGroupingNodeAndChildren(String groupingNodeName, HashMap<String, ArrayList> issues) {
-        final DefaultMutableTreeNode groupingNode = new DefaultMutableTreeNode(groupingNodeName);
+        final DefaultMutableTreeNode groupingNode = new DefaultMutableTreeNode(String.valueOf(counter++) +" - " + groupingNodeName);
         groupingNode.setUserObject(new GroupTreeItem(groupingNodeName, groupingNodeName));
 
         issues.forEach(new BiConsumer<String, ArrayList>() {
@@ -410,5 +414,45 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
             //renderer.setIcon(IconLoader.getIcon("/icons/trace/Generic.png"));
             return renderer;
         }
+    }
+
+    private void handleTreeWillExpand(TreeExpansionEvent event) {
+        TreePath path = event.getPath();
+
+        DefaultMutableTreeNode pathComponent = (DefaultMutableTreeNode)event.getPath().getLastPathComponent();
+
+        updateTreeNode(pathComponent);
+
+//        DefaultMutableTreeNode child = (DefaultMutableTreeNode)treeModel.getChild(treeModel.getRoot(), 1);
+//        System.out.println("child = "+child);
+
+        //DefaultMutableTreeNode source = (DefaultMutableTreeNode)event.getSource();
+        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)issuesTree.getLastSelectedPathComponent();
+        DefaultMutableTreeNode lastPathComponent = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
+        System.out.println("TreeWillExpandListener, treeWillExpand, "+lastPathComponent.toString());
+    }
+
+    private void updateTreeNode(DefaultMutableTreeNode node) {
+        List<String> data = generateTreeData();
+        node.removeAllChildren();
+        for(int i=0; i<data.size(); i++) {
+            node.add(new DefaultMutableTreeNode(data.get(i)));
+        }
+        treeModel.reload(node);
+    }
+
+    private List<String> generateTreeData() {
+        System.out.println("Generating some data...");
+        ArrayList<String> list = new ArrayList<>();
+        try {
+            Thread.sleep(2000);
+            for(int i=0; i<15; i++) {
+                list.add(LocalTime.now() + " ... " + String.valueOf(i));
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Returning data...");
+        return list;
     }
 }
