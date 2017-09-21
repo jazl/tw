@@ -1,6 +1,7 @@
 package com.fortify.fod.remediation.ui;
 
 import com.fortify.fod.remediation.messages.IssueChangeInfo;
+import com.fortify.fod.remediation.messages.ToolWindowActionListener;
 import com.fortify.fod.remediation.models.VulnFolder;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
@@ -10,11 +11,16 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.LightVirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,8 +29,9 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.io.File;
+import java.util.Collection;
 
-public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
+public class AnalysisResultsToolWindow extends RemediationToolWindowBase implements ToolWindowActionListener {
 
     private VulnTabbedPane tabbedPane;
 
@@ -52,7 +59,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         tabbedPane.setModel(tabModel);
 
         for(VulnFolder f:folders) {
-            tabbedPane.addTab(f.getTitle(), new AnalysisResultsTabPanel(f));
+            tabbedPane.addTab(f.getTitle(), new AnalysisResultsTabPanel(f, this));
             //tabbedPane.add(getTabContents());
         }
 
@@ -147,4 +154,55 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase {
         }
     }
 
+    @Override
+    public void getSource() {
+        System.out.println("working with project "+this.project.getName());
+
+        GlobalSearchScope globalSearchScope = new GlobalSearchScope() {
+            @Override
+            public int compare(@NotNull VirtualFile virtualFile, @NotNull VirtualFile virtualFile1) {
+                return 0;
+            }
+
+            @Override
+            public boolean isSearchInModuleContent(@NotNull Module module) {
+                return true;
+            }
+
+            @Override
+            public boolean isSearchInLibraries() {
+                return false;
+            }
+
+            @Override
+            public boolean contains(@NotNull VirtualFile virtualFile) {
+                return true;
+            }
+        };
+
+        String[] allFilenames = FilenameIndex.getAllFilenames(project);
+
+        Collection<VirtualFile> virtualFilesByName = FilenameIndex.getVirtualFilesByName(project, "Class1.java", globalSearchScope);
+
+        if(virtualFilesByName.isEmpty()) {
+            Messages.showErrorDialog("Cannot find file", "Error");
+        }
+        else {
+            VirtualFile virtualFile = virtualFilesByName.iterator().next();
+            FileEditorManager fem = FileEditorManager.getInstance(project);
+            OpenFileDescriptor openFileDescriptor = new OpenFileDescriptor(project, virtualFile);
+            java.util.List<FileEditor> fileEditors = fem.openEditor(openFileDescriptor, true);
+        }
+
+        for(int i=0; i<allFilenames.length; i++){
+            if(allFilenames[i].endsWith(".java")) {
+                System.out.println(allFilenames[i]);
+            }
+        }
+        String fileName = "GridBagLayout.java";
+
+        PsiFile[] filesByName = FilenameIndex.getFilesByName(project, fileName, globalSearchScope);
+
+
+    }
 }

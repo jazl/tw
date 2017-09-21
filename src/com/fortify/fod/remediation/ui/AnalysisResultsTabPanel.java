@@ -3,6 +3,7 @@ package com.fortify.fod.remediation.ui;
 import com.fortify.fod.remediation.custom.GroupTreeItem;
 import com.fortify.fod.remediation.custom.IssueTreeItem;
 import com.fortify.fod.remediation.custom.VulnNodeCellRender;
+import com.fortify.fod.remediation.messages.ToolWindowActionListener;
 import com.fortify.fod.remediation.models.VulnFolder;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.JBCheckboxMenuItem;
@@ -37,8 +38,10 @@ public class AnalysisResultsTabPanel extends JPanel {
     private Tree issuesTree;
     private JLabel folderLabel;
     private String tabTitle;
+    private ToolWindowActionListener myListener;
 
-    public AnalysisResultsTabPanel(VulnFolder folder) {
+    public AnalysisResultsTabPanel(VulnFolder folder, ToolWindowActionListener listener) {
+        myListener = listener;
         tabTitle = folder.getTitle();
 
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -157,7 +160,8 @@ public class AnalysisResultsTabPanel extends JPanel {
 //
 //
 
-                folderLabel.setText("Option button clicked!");
+                loadSource();
+                //folderLabel.setText("Option button clicked!");
             }
         });
 
@@ -293,4 +297,7 @@ public class AnalysisResultsTabPanel extends JPanel {
         System.out.println("Removed all children!!");
     }
 
+    private void loadSource() {
+        myListener.getSource();
+    }
 }
