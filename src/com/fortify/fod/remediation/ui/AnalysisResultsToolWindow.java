@@ -1,16 +1,16 @@
 package com.fortify.fod.remediation.ui;
 
+import com.fortify.fod.remediation.messages.ChangeActionNotifier;
 import com.fortify.fod.remediation.messages.IssueChangeInfo;
 import com.fortify.fod.remediation.messages.ToolWindowActionListener;
 import com.fortify.fod.remediation.models.VulnFolder;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.ToggleAction;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -22,14 +22,17 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.testFramework.LightVirtualFile;
+import com.intellij.util.messages.MessageBus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.Collection;
+import java.util.*;
 
 public class AnalysisResultsToolWindow extends RemediationToolWindowBase implements ToolWindowActionListener {
 
@@ -110,6 +113,8 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase impleme
         java.util.List<FileEditor> fileEditors = fem.openEditor(openFileDescriptor, true);
     }
 
+    LightVirtualFile vf = null;
+
     private void showInMemoryDocument() {
         Project project = ProjectManager.getInstance().getOpenProjects()[0];
 
@@ -128,11 +133,34 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase impleme
         // https://intellij-support.jetbrains.com/hc/en-us/community/posts/206132679/comments/206178995
 
         // An in-memory VF.
-        LightVirtualFile vf = new LightVirtualFile("LightVirtualFile.java", "What the deuce?!??");
+        if(vf == null) {
+            vf = new LightVirtualFile("LightVirtualFile.java", "What the deuce?!??");
+        }
         OpenFileDescriptor fd = new OpenFileDescriptor(project, vf);
 
         //fd.navigate(true);
-        fem.openEditor(fd, true);
+        java.util.List<FileEditor> fileEditors = fem.openEditor(fd, true);
+        FileEditor fileEditor = fileEditors.get(0);
+        fileEditor.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                System.out.println("PropertyChangeEvent fired!!");
+            }
+        });
+
+        Application application = ApplicationManager.getApplication();
+        MessageBus bus = application.getMessageBus();
+
+        bus.connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+            @Override
+            public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+                System.out.println("test");
+                if(file.getName().equals("LightVirtualFile.java")) {
+//                    vf = null;
+                }
+            }
+        });
+
         //fem.openFile(vf, true   );
     }
 
@@ -154,8 +182,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase impleme
         }
     }
 
-    @Override
-    public void getSource() {
+    private void getFileInProject(){
         System.out.println("working with project "+this.project.getName());
 
         GlobalSearchScope globalSearchScope = new GlobalSearchScope() {
@@ -192,6 +219,8 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase impleme
             FileEditorManager fem = FileEditorManager.getInstance(project);
             OpenFileDescriptor openFileDescriptor = new OpenFileDescriptor(project, virtualFile);
             java.util.List<FileEditor> fileEditors = fem.openEditor(openFileDescriptor, true);
+            //FileEditor thisEditor = fileEditors.get(0);
+            System.out.println("test");
         }
 
         for(int i=0; i<allFilenames.length; i++){
@@ -202,7 +231,10 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase impleme
         String fileName = "GridBagLayout.java";
 
         PsiFile[] filesByName = FilenameIndex.getFilesByName(project, fileName, globalSearchScope);
+    }
 
-
+    @Override
+    public void getSource() {
+        showInMemoryDocument();
     }
 }
