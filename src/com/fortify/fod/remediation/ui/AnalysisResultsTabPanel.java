@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
+import static com.fortify.fod.remediation.ui.RemediationToolWindowBase.remediationPluginService;
+
 /**
  * Created by jazl on 9/4/2017.
  */
@@ -104,7 +106,7 @@ public class AnalysisResultsTabPanel extends JPanel {
                 Object userObject = lastPathComponent.getUserObject();
                 System.out.println("TreeSelectionListener, valueChanged on "+userObject.getClass().getTypeName()+", "+lastPathComponent.toString());
                 //showFileInEditor();
-                //remediationPluginService.publishIssueChange(selectedNode.toString());
+                remediationPluginService.publishIssueChange(lastPathComponent.toString());
             }
         });
 

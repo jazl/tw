@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="867b6081-ad9b-444d-ba27-045781373397" name="Default" comment="ignore workspace.xml">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/fortify/fod/remediation/messages/ToolWindowActionListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+    <list default="true" id="867b6081-ad9b-444d-ba27-045781373397" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsTabPanel.java" afterPath="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsTabPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsToolWindow.java" afterPath="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsToolWindow.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/IssueSummaryToolWindow.java" afterPath="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/IssueSummaryToolWindow.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,21 +17,26 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="AnalysisResultsToolWindow.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AnalysisResultsToolWindow.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsToolWindow.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="386">
-              <caret line="190" column="35" lean-forward="false" selection-start-line="190" selection-start-column="35" selection-end-line="190" selection-end-column="35" />
+            <state relative-caret-position="102">
+              <caret line="35" column="17" lean-forward="false" selection-start-line="35" selection-start-column="17" selection-end-line="35" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#6206#6207#0" expanded="true" />
-                <element signature="e#6246#6247#0" expanded="true" />
-                <element signature="e#6346#6347#0" expanded="true" />
-                <element signature="e#6389#6390#0" expanded="true" />
-                <element signature="e#6463#6464#0" expanded="true" />
-                <element signature="e#6507#6508#0" expanded="true" />
-                <element signature="e#6602#6603#0" expanded="true" />
-                <element signature="e#6645#6646#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IssueSummaryToolWindow.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/IssueSummaryToolWindow.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="57" column="54" lean-forward="false" selection-start-line="57" selection-start-column="54" selection-end-line="57" selection-end-column="54" />
+              <folding>
+                <element signature="e#10293#10775#0" expanded="true" />
+                <element signature="e#10774#10775#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -42,8 +45,8 @@
       <file leaf-file-name="plugin.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="451">
-              <caret line="30" column="6" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+            <state relative-caret-position="493">
+              <caret line="29" column="46" lean-forward="false" selection-start-line="29" selection-start-column="46" selection-end-line="29" selection-end-column="46" />
               <folding />
             </state>
           </provider>
@@ -52,11 +55,11 @@
       <file leaf-file-name="AnalysisResultsTabPanel.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsTabPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="300" column="31" lean-forward="true" selection-start-line="300" selection-start-column="31" selection-end-line="300" selection-end-column="31" />
+            <state relative-caret-position="1275">
+              <caret line="106" column="77" lean-forward="false" selection-start-line="106" selection-start-column="77" selection-end-line="106" selection-end-column="77" />
               <folding>
-                <element signature="e#13124#13125#0" expanded="true" />
-                <element signature="e#13162#13163#0" expanded="true" />
+                <element signature="e#13225#13226#0" expanded="true" />
+                <element signature="e#13263#13264#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -94,12 +97,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ListC</find>
-      <find>ListCe</find>
-      <find>ListCel</find>
-      <find>ListCell</find>
-      <find>ListCellR</find>
-      <find>ListCellRe</find>
       <find>ListCellRend</find>
       <find>iconload</find>
       <find>list.set</find>
@@ -109,7 +106,6 @@
       <find>issuetr</find>
       <find>issuestre</find>
       <find>treeModel</find>
-      <find>.add</find>
       <find>project</find>
       <find>options</find>
       <find>loadSour</find>
@@ -124,6 +120,13 @@
       <find>exten</find>
       <find>extends</find>
       <find>openfiledesc</find>
+      <find>.add</find>
+      <find>vulnTr</find>
+      <find>\n</find>
+      <find>recommendationsLabel</find>
+      <find>mockAuditDetails</find>
+      <find>detailsLabel</find>
+      <find>_width</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -156,14 +159,14 @@
         <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/RemediationToolWindowBase.java" />
         <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/messages/IssueChangeInfo.java" />
         <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/messages/ChangeActionNotifier.java" />
-        <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/IssueSummaryToolWindow.java" />
         <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/RemediationPluginService.java" />
         <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisTraceToolWindow.java" />
         <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AuditSummaryToolWindow.java" />
         <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/custom/IssueTreeItem.java" />
         <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/messages/ToolWindowActionListener.java" />
-        <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsTabPanel.java" />
         <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsToolWindow.java" />
+        <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsTabPanel.java" />
+        <option value="$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/IssueSummaryToolWindow.java" />
       </list>
     </option>
   </component>
@@ -181,10 +184,10 @@
     <option name="CUSTOM_FILTER" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="59" />
-    <option name="y" value="9" />
-    <option name="width" value="1602" />
-    <option name="height" value="1033" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1066" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -204,6 +207,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -266,23 +270,32 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="remediation" />
+              <option name="myItemId" value="META-INF" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tw" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tw" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="messages" />
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -749,6 +762,8 @@
       <workItem from="1504406243620" duration="6530000" />
       <workItem from="1504457477803" duration="493000" />
       <workItem from="1504587152815" duration="76000" />
+      <workItem from="1506051789277" duration="3720000" />
+      <workItem from="1506093827950" duration="298000" />
     </task>
     <task id="LOCAL-00001" summary="cleaned up imports">
       <created>1503172996246</created>
@@ -834,11 +849,18 @@
       <option name="project" value="LOCAL" />
       <updated>1504376674703</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="opening file from project!">
+      <created>1506015865191</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1506015865191</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="80112000" />
+    <option name="totallyTimeSpent" value="84352000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -850,62 +872,39 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="59" y="9" width="1602" height="1033" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881773" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3272727" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.48914286" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32914287" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30837005" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3370044" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27112675" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.270428" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18443497" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24967659" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20114286" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27312776" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24967659" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27312776" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881773" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32819384" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40638766" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31057268" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27112675" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15351813" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -952,7 +951,8 @@
     <MESSAGE value="abstract method onIssueChange" />
     <MESSAGE value="4-flesh-out-summary-tool-windows" />
     <MESSAGE value="ignore workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="ignore workspace.xml" />
+    <MESSAGE value="opening file from project!" />
+    <option name="LAST_COMMIT_MESSAGE" value="opening file from project!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -987,14 +987,6 @@
           <caret line="52" column="0" lean-forward="true" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6206#6207#0" expanded="true" />
-            <element signature="e#6246#6247#0" expanded="true" />
-            <element signature="e#6346#6347#0" expanded="true" />
-            <element signature="e#6389#6390#0" expanded="true" />
-            <element signature="e#6463#6464#0" expanded="true" />
-            <element signature="e#6507#6508#0" expanded="true" />
-            <element signature="e#6602#6603#0" expanded="true" />
-            <element signature="e#6645#6646#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1036,14 +1028,6 @@
           <caret line="46" column="0" lean-forward="true" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6206#6207#0" expanded="true" />
-            <element signature="e#6246#6247#0" expanded="true" />
-            <element signature="e#6346#6347#0" expanded="true" />
-            <element signature="e#6389#6390#0" expanded="true" />
-            <element signature="e#6463#6464#0" expanded="true" />
-            <element signature="e#6507#6508#0" expanded="true" />
-            <element signature="e#6602#6603#0" expanded="true" />
-            <element signature="e#6645#6646#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1070,14 +1054,6 @@
           <caret line="73" column="46" lean-forward="true" selection-start-line="73" selection-start-column="46" selection-end-line="73" selection-end-column="46" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6206#6207#0" expanded="true" />
-            <element signature="e#6246#6247#0" expanded="true" />
-            <element signature="e#6346#6347#0" expanded="true" />
-            <element signature="e#6389#6390#0" expanded="true" />
-            <element signature="e#6463#6464#0" expanded="true" />
-            <element signature="e#6507#6508#0" expanded="true" />
-            <element signature="e#6602#6603#0" expanded="true" />
-            <element signature="e#6645#6646#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1111,14 +1087,6 @@
           <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6206#6207#0" expanded="true" />
-            <element signature="e#6246#6247#0" expanded="true" />
-            <element signature="e#6346#6347#0" expanded="true" />
-            <element signature="e#6389#6390#0" expanded="true" />
-            <element signature="e#6463#6464#0" expanded="true" />
-            <element signature="e#6507#6508#0" expanded="true" />
-            <element signature="e#6602#6603#0" expanded="true" />
-            <element signature="e#6645#6646#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1134,14 +1102,6 @@
     <entry file="jar://C:/Program Files/JetBrains/IntelliJ IDEA Community Edition 2017.1.3/lib/idea.jar!/com/intellij/openapi/wm/impl/CommandProcessor.class" />
     <entry file="jar://C:/Program Files/JetBrains/IntelliJ IDEA Community Edition 2017.1.3/lib/openapi.jar!/com/intellij/ui/content/ContentManager.class" />
     <entry file="jar://C:/Program Files/JetBrains/IntelliJ IDEA Community Edition 2017.1.3/lib/idea.jar!/com/intellij/ui/content/impl/ContentManagerImpl.class" />
-    <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="30" column="6" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/fortify/fod/remediation/messages/IssueChangeInfo.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="40">
@@ -1165,13 +1125,6 @@
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/javax/swing/JPanel.java" />
     <entry file="jar://C:/Program Files/JetBrains/IntelliJ IDEA Community Edition 2017.1.3/lib/util.jar!/com/intellij/util/ui/JBUI.class" />
-    <entry file="file://$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/IssueSummaryToolWindow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="46" column="15" lean-forward="false" selection-start-line="46" selection-start-column="15" selection-end-line="46" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AuditSummaryToolWindow.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1717">
@@ -1274,31 +1227,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsTabPanel.java">
+    <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="300" column="31" lean-forward="true" selection-start-line="300" selection-start-column="31" selection-end-line="300" selection-end-column="31" />
-          <folding>
-            <element signature="e#13124#13125#0" expanded="true" />
-            <element signature="e#13162#13163#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="493">
+          <caret line="29" column="46" lean-forward="false" selection-start-line="29" selection-start-column="46" selection-end-line="29" selection-end-column="46" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsToolWindow.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="386">
-          <caret line="190" column="35" lean-forward="false" selection-start-line="190" selection-start-column="35" selection-end-line="190" selection-end-column="35" />
+        <state relative-caret-position="102">
+          <caret line="35" column="17" lean-forward="false" selection-start-line="35" selection-start-column="17" selection-end-line="35" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6206#6207#0" expanded="true" />
-            <element signature="e#6246#6247#0" expanded="true" />
-            <element signature="e#6346#6347#0" expanded="true" />
-            <element signature="e#6389#6390#0" expanded="true" />
-            <element signature="e#6463#6464#0" expanded="true" />
-            <element signature="e#6507#6508#0" expanded="true" />
-            <element signature="e#6602#6603#0" expanded="true" />
-            <element signature="e#6645#6646#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/AnalysisResultsTabPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1275">
+          <caret line="106" column="77" lean-forward="false" selection-start-line="106" selection-start-column="77" selection-end-line="106" selection-end-column="77" />
+          <folding>
+            <element signature="e#13225#13226#0" expanded="true" />
+            <element signature="e#13263#13264#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/fortify/fod/remediation/ui/IssueSummaryToolWindow.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="57" column="54" lean-forward="false" selection-start-line="57" selection-start-column="54" selection-end-line="57" selection-end-column="54" />
+          <folding>
+            <element signature="e#10293#10775#0" expanded="true" />
+            <element signature="e#10774#10775#0" expanded="true" />
           </folding>
         </state>
       </provider>
