@@ -58,4 +58,8 @@ public class RemediationPluginService {
         publisher.onProjectChanged(msg);
     }
 
+    public void publicLogoff(String msg){
+        publisher.onLogoff();
+    }
+
 }

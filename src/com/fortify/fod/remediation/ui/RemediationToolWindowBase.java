@@ -26,7 +26,8 @@ import java.awt.event.MouseEvent;
 
 public abstract class RemediationToolWindowBase implements ToolWindowFactory {
 
-    private Object selectedFoDProject = new Object(); // set to non-null to bypass the "unlogged-in" state of tool windows
+    //private Object selectedFoDProject = new Object(); // set to non-null to bypass the "unlogged-in" state of tool windows
+    private Object selectedFoDProject = null;
     private Content content = null;
     private Content uninitializedContent = null;
     private String toolWindowId = "";
@@ -72,6 +73,12 @@ public abstract class RemediationToolWindowBase implements ToolWindowFactory {
             @Override
             public void onIssueChanged(IssueChangeInfo msg) {
                 onIssueChange(msg);
+            }
+
+            @Override
+            public void onLogoff() {
+                selectedFoDProject = null;
+                toggleContent();
             }
         });
     }

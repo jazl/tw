@@ -8,5 +8,6 @@ public interface ChangeActionNotifier {
 
     void onProjectChanged(String message);
     void onIssueChanged(IssueChangeInfo changeInfo);
+    void onLogoff();
 
 }

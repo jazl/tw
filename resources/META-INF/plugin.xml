@@ -36,6 +36,7 @@
     <group id="com.fortify.Toolwindows.group" text="Fortify" description="Fortify" >
       <add-to-group group-id="MainMenu" anchor="before" relative-to-action="WindowMenu"/>
       <action id="com.fortify.showTw" class="com.fortify.fod.remediation.RemediationAction" text="Open Analysis Results..." description="Open Analysis Results" />
+      <action id="com.fortify.logoff" class="com.fortify.fod.remediation.LogoffAction" text="Log Off..." description="Log Off Fortify on Demand" />
     </group>
     <!-- Add your actions here -->
   </actions>
