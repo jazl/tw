@@ -162,7 +162,8 @@ public class AnalysisResultsTabPanel extends JPanel {
 //
 //
 
-                loadSource();
+                verifyProject();
+                //loadSource();
                 //folderLabel.setText("Option button clicked!");
             }
         });
@@ -301,5 +302,10 @@ public class AnalysisResultsTabPanel extends JPanel {
 
     private void loadSource() {
         myListener.getSource();
+    }
+
+    private void verifyProject() {
+        // Test if we can use the project component to separate instances of plugin?
+
     }
 }

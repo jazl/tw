@@ -41,4 +41,10 @@
     <!-- Add your actions here -->
   </actions>
 
+  <project-components>
+    <component>
+      <implementation-class>com.fortify.fod.remediation.RemediationProjectComponent</implementation-class>
+    </component>
+  </project-components>
+
 </idea-plugin>
