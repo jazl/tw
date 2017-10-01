@@ -33,10 +33,17 @@
   </extensions>
 
   <actions>
-    <group id="com.fortify.Toolwindows.group" text="Fortify" description="Fortify" >
+    <group id="MyGroup1" text="Fortify" description="Fortify" >
       <add-to-group group-id="MainMenu" anchor="before" relative-to-action="WindowMenu"/>
       <action id="com.fortify.showTw" class="com.fortify.fod.remediation.RemediationAction" text="Open Analysis Results..." description="Open Analysis Results" />
       <action id="com.fortify.logoff" class="com.fortify.fod.remediation.LogoffAction" text="Log Off..." description="Log Off Fortify on Demand" />
+      <action id="com.fortify.firstProject" class="com.fortify.fod.remediation.FirstProjectAction" text="First Project..." description="Open Source File in *first* project" />
+    </group>
+    <group id="MyGroup2" text="Group2" description="Fortify group 2" >
+      <add-to-group group-id="MyGroup1" />
+      <action id="com.fortify.currentProject" class="com.fortify.fod.remediation.CurrentProjectAction" text="Current Project..." description="Open Source file in current project" />
+      <action id="com.fortify.activate" class="com.fortify.fod.remediation.ActivateToolWindowAction" text="Activate Toolwindow..." description="Activate" />
+      <action id="com.fortify.hide" class="com.fortify.fod.remediation.HideToolWindowAction" text="Hide Toolwindow..." description="Hide it!" />
     </group>
     <!-- Add your actions here -->
   </actions>
