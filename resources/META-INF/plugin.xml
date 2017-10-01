@@ -39,8 +39,8 @@
       <action id="com.fortify.logoff" class="com.fortify.fod.remediation.LogoffAction" text="Log Off..." description="Log Off Fortify on Demand" />
       <action id="com.fortify.firstProject" class="com.fortify.fod.remediation.FirstProjectAction" text="First Project..." description="Open Source File in *first* project" />
     </group>
-    <group id="MyGroup2" text="Group2" description="Fortify group 2" >
-      <add-to-group group-id="MyGroup1" />
+    <group id="MyGroup2" text="Group2" description="Fortify group 2" popup="true" >
+      <add-to-group group-id="MyGroup1" anchor="after" relative-to-action="com.fortify.showTw" />
       <action id="com.fortify.currentProject" class="com.fortify.fod.remediation.CurrentProjectAction" text="Current Project..." description="Open Source file in current project" />
       <action id="com.fortify.activate" class="com.fortify.fod.remediation.ActivateToolWindowAction" text="Activate Toolwindow..." description="Activate" />
       <action id="com.fortify.hide" class="com.fortify.fod.remediation.HideToolWindowAction" text="Hide Toolwindow..." description="Hide it!" />
