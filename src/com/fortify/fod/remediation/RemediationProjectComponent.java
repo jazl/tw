@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RemediationProjectComponent implements ProjectComponent {
 
+    private Object someObject = null;
+
     public RemediationProjectComponent(Project project) {
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component constructor, project "+project.getName()+" <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
@@ -20,6 +22,7 @@ public class RemediationProjectComponent implements ProjectComponent {
 
     @Override
     public void projectClosed() {
+        someObject = null;
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component projectClosed <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
 
@@ -38,4 +41,13 @@ public class RemediationProjectComponent implements ProjectComponent {
     public String getComponentName() {
         return "RemediationProjectComponent";
     }
+
+    public boolean isLoggedIn() {
+        return someObject != null;
+    }
+
+    public void setLogin(boolean isLoggedIn) {
+        someObject = isLoggedIn ? new Object() : null;
+    }
+
 }

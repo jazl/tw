@@ -36,7 +36,9 @@
     <group id="MyGroup1" text="Fortify" description="Fortify" >
       <add-to-group group-id="MainMenu" anchor="before" relative-to-action="WindowMenu"/>
       <action id="com.fortify.showTw" class="com.fortify.fod.remediation.RemediationAction" text="Open Analysis Results..." description="Open Analysis Results" />
+      <action id="com.fortify.logon" class="com.fortify.fod.remediation.LogonAction" text="Log On..." description="Log On to Fortify on Demand" />
       <action id="com.fortify.logoff" class="com.fortify.fod.remediation.LogoffAction" text="Log Off..." description="Log Off Fortify on Demand" />
+      <action id="com.fortify.checkStatus" class="com.fortify.fod.remediation.CheckStatusAction" text="Check Logon Status..." description="Check status" />
       <action id="com.fortify.firstProject" class="com.fortify.fod.remediation.FirstProjectAction" text="First Project..." description="Open Source File in *first* project" />
     </group>
     <group id="MyGroup2" text="Group2" description="Fortify group 2" popup="true" >
