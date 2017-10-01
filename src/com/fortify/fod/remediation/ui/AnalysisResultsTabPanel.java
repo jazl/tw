@@ -5,6 +5,11 @@ import com.fortify.fod.remediation.custom.IssueTreeItem;
 import com.fortify.fod.remediation.custom.VulnNodeCellRender;
 import com.fortify.fod.remediation.messages.ToolWindowActionListener;
 import com.fortify.fod.remediation.models.VulnFolder;
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.JBCheckboxMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
@@ -307,5 +312,9 @@ public class AnalysisResultsTabPanel extends JPanel {
     private void verifyProject() {
         // Test if we can use the project component to separate instances of plugin?
 
+        AnAction a = ActionManager.getInstance().getAction("com.fortify.checkStatus");
+
+        AnActionEvent e = AnActionEvent.createFromDataContext(ActionPlaces.ACTION_SEARCH, null, DataManager.getInstance().getDataContext(this));
+        a.actionPerformed(e);
     }
 }
