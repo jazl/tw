@@ -84,12 +84,16 @@ public class IssueSummaryToolWindow extends RemediationToolWindowBase {
 
         panel.add(headerLabel, BorderLayout.NORTH);
 
+        System.out.println(".............. createToolWindowContent after add, headerLabel = "+headerLabel.getText());
+
         JBTabbedPane tab = new JBTabbedPane();
         tab.addTab("Details", createDetailsContent());
         tab.addTab("Recommendations", createRecommendationsContent());
         panel.add(tab, BorderLayout.CENTER);
 
         addContent(toolWindow, panel);
+
+        toolWindow.setTitle(project.getName()+" - "+this.hashCode());
     }
 
     @Override
@@ -97,6 +101,8 @@ public class IssueSummaryToolWindow extends RemediationToolWindowBase {
         headerLabel.setText(changeInfo.getIssueName());
         detailsLabel.setHtmlContent(mockAuditDetails);
         recommendationsLabel.setHtmlContent(mockRecommendations);
+
+        System.out.println(".............. onIssueChange after add, headerLabel = "+headerLabel.getText());
 
         detailsLabel.addHyperlinkListener(new HyperlinkListener() {
             @Override

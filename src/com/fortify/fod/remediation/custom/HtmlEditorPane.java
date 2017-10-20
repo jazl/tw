@@ -1,5 +1,7 @@
 package com.fortify.fod.remediation.custom;
 
+import sun.plugin.util.UIUtil;
+
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
@@ -13,6 +15,7 @@ import java.io.IOException;
  */
 public class HtmlEditorPane extends JEditorPane {
     private HTMLDocument htmlDoc;
+    private boolean isUnderDarcula = false;
     public HtmlEditorPane() {
         super();
 
@@ -24,6 +27,9 @@ public class HtmlEditorPane extends JEditorPane {
         setEditorKit(htmlKit);
         setDocument(htmlDoc);
         setEditable(false);
+
+        isUnderDarcula = com.intellij.util.ui.UIUtil.isUnderDarcula();
+        System.out.println("isUnderDarcula = "+isUnderDarcula );
     }
 
     public void setHtmlContent(String htmlContent) {

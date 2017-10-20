@@ -32,6 +32,10 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
@@ -115,7 +119,18 @@ public class AnalysisResultsTabPanel extends JPanel {
             }
         });
 
-        return new JBScrollPane(issuesTree);
+        JBScrollPane scrollPane = new JBScrollPane(issuesTree);
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                if(!e.getValueIsAdjusting()) {
+                    int extent = scrollPane.getVerticalScrollBar().getModel().getExtent();
+                    //System.out.println("Value: " + (scrollPane.getVerticalScrollBar().getValue()+extent) + " Max: " + scrollPane.getVerticalScrollBar().getMaximum());
+                }
+            }
+        });
+
+        return scrollPane;
     }
 
     private JPanel getFilterPanel() {
@@ -252,6 +267,9 @@ public class AnalysisResultsTabPanel extends JPanel {
         traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
         issues = new HashMap<>();
         issues.put("Exec.java:103", traceNodes);
+        for(int i=1; i<=50; i++) {
+            issues.put("Exec.java:"+i, traceNodes);
+        }
         root.add(createGroupingNodeAndChildren("Command Injection (3) - "+hashCode, issues));
 
         traceNodes = new ArrayList<>();
@@ -261,7 +279,6 @@ public class AnalysisResultsTabPanel extends JPanel {
         issues = new HashMap<>();
         issues.put("Exec.java:103", traceNodes);
         root.add(createGroupingNodeAndChildren("Cookie Security: Cookie not Sent Over SSL (2) - "+hashCode, issues));
-
         root.add(createGroupingNodeAndChildren("Log Forging (2)", issues));
         root.add(createGroupingNodeAndChildren("Null Reference(2)", issues));
         root.add(createGroupingNodeAndChildren("Null Reference(107)", issues));

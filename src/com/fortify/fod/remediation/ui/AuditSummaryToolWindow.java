@@ -104,6 +104,9 @@ public class AuditSummaryToolWindow extends RemediationToolWindowBase {
         panel.add(tab, BorderLayout.CENTER);
 
         addContent(toolWindow, panel);
+
+        toolWindow.setTitle(project.getName()+" - "+this.hashCode());
+
     }
 
     @Override

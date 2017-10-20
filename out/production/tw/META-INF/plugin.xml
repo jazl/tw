@@ -30,14 +30,31 @@
     <toolWindow id="Issue Summary" secondary="true" icon="/icons/summary.png" anchor="right" factoryClass="com.fortify.fod.remediation.ui.IssueSummaryToolWindow"/>
     <toolWindow id="Analysis Trace" secondary="true" icon="/icons/issue_details.png" anchor="bottom" factoryClass="com.fortify.fod.remediation.ui.AnalysisTraceToolWindow"/>
     <toolWindow id="Audit Summary" secondary="true" icon="/icons/summary.png" anchor="bottom" factoryClass="com.fortify.fod.remediation.ui.AuditSummaryToolWindow"/>
+    <toolWindow id="Test" secondary="true" icon="/icons/summary.png" anchor="bottom" factoryClass="com.fortify.fod.remediation.ui.TestToolWindow"/>
   </extensions>
 
   <actions>
-    <group id="com.fortify.Toolwindows.group" text="Fortify" description="Fortify" >
+    <group id="MyGroup1" text="Fortify" description="Fortify" >
       <add-to-group group-id="MainMenu" anchor="before" relative-to-action="WindowMenu"/>
       <action id="com.fortify.showTw" class="com.fortify.fod.remediation.RemediationAction" text="Open Analysis Results..." description="Open Analysis Results" />
+      <action id="com.fortify.logon" class="com.fortify.fod.remediation.LogonAction" text="Log On..." description="Log On to Fortify on Demand" />
+      <action id="com.fortify.logoff" class="com.fortify.fod.remediation.LogoffAction" text="Log Off..." description="Log Off Fortify on Demand" />
+      <action id="com.fortify.checkStatus" class="com.fortify.fod.remediation.CheckStatusAction" text="Check Logon Status..." description="Check status" />
+      <action id="com.fortify.firstProject" class="com.fortify.fod.remediation.FirstProjectAction" text="First Project..." description="Open Source File in *first* project" />
+    </group>
+    <group id="MyGroup2" text="Group2" description="Fortify group 2" popup="true" >
+      <add-to-group group-id="MyGroup1" anchor="after" relative-to-action="com.fortify.showTw" />
+      <action id="com.fortify.currentProject" class="com.fortify.fod.remediation.CurrentProjectAction" text="Current Project..." description="Open Source file in current project" />
+      <action id="com.fortify.activate" class="com.fortify.fod.remediation.ActivateToolWindowAction" text="Activate Toolwindow..." description="Activate" />
+      <action id="com.fortify.hide" class="com.fortify.fod.remediation.HideToolWindowAction" text="Hide Toolwindow..." description="Hide it!" />
     </group>
     <!-- Add your actions here -->
   </actions>
+
+  <project-components>
+    <component>
+      <implementation-class>com.fortify.fod.remediation.RemediationProjectComponent</implementation-class>
+    </component>
+  </project-components>
 
 </idea-plugin>

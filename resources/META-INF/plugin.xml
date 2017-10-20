@@ -30,6 +30,7 @@
     <toolWindow id="Issue Summary" secondary="true" icon="/icons/summary.png" anchor="right" factoryClass="com.fortify.fod.remediation.ui.IssueSummaryToolWindow"/>
     <toolWindow id="Analysis Trace" secondary="true" icon="/icons/issue_details.png" anchor="bottom" factoryClass="com.fortify.fod.remediation.ui.AnalysisTraceToolWindow"/>
     <toolWindow id="Audit Summary" secondary="true" icon="/icons/summary.png" anchor="bottom" factoryClass="com.fortify.fod.remediation.ui.AuditSummaryToolWindow"/>
+    <toolWindow id="Test" secondary="true" icon="/icons/summary.png" anchor="bottom" factoryClass="com.fortify.fod.remediation.ui.TestToolWindow"/>
   </extensions>
 
   <actions>

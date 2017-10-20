@@ -26,8 +26,8 @@ import java.awt.event.MouseEvent;
 
 public abstract class RemediationToolWindowBase implements ToolWindowFactory {
 
-    //private Object selectedFoDProject = new Object(); // set to non-null to bypass the "unlogged-in" state of tool windows
-    private Object selectedFoDProject = null;
+    private Object selectedFoDProject = new Object(); // set to non-null to bypass the "unlogged-in" state of tool windows
+    //private Object selectedFoDProject = null;
     private Content content = null;
     private Content uninitializedContent = null;
     private String toolWindowId = "";
@@ -36,11 +36,11 @@ public abstract class RemediationToolWindowBase implements ToolWindowFactory {
     private BorderLayout defaultToolWindowBorderLayout = new BorderLayout(5,5);
 
     protected Project project = null;
-    protected JLabel headerLabel = new JLabel();
+    protected JLabel headerLabel;
     protected static RemediationPluginService remediationPluginService = ServiceManager.getService(RemediationPluginService.class);
 
     public RemediationToolWindowBase() {
-        headerLabel.setText("<Select Vulnerability>");
+        headerLabel = new JLabel("<Select Vulnerability>");
     }
 
     @Override
@@ -50,6 +50,7 @@ public abstract class RemediationToolWindowBase implements ToolWindowFactory {
         if(selectedFoDProject == null) {
             return;
         }
+
     }
 
     @Override
