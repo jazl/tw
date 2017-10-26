@@ -59,7 +59,7 @@ public abstract class RemediationToolWindowBase implements ToolWindowFactory {
 
         Project[] openProjects = ProjectManager.getInstance().getOpenProjects();
         if(openProjects != null) {
-            System.out.println("openProjects.length = "+openProjects.length);
+            //System.out.println("openProjects.length = "+openProjects.length);
             project = openProjects[0];
         }
 

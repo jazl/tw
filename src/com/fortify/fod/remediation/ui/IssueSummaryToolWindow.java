@@ -65,7 +65,7 @@ public class IssueSummaryToolWindow extends RemediationToolWindowBase {
             @Override
             public void componentResized(ComponentEvent arg0) {
                 int width = arg0.getComponent().getWidth();
-                System.out.println("width = "+width);
+                //System.out.println("width = "+width);
                 _width = width;
                 //scrollPane.setSize(arg0.getComponent().getWidth(), 0);
                 recommendationsLabel.setSize(_width, recommendationsLabel.getHeight());

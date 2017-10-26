@@ -12,28 +12,28 @@ public class RemediationProjectComponent implements ProjectComponent {
     private Object someObject = null;
 
     public RemediationProjectComponent(Project project) {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component constructor, project "+project.getName()+" <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component constructor, project "+project.getName()+" <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
 
     @Override
     public void projectOpened() {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component projectOpened <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component projectOpened <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
 
     @Override
     public void projectClosed() {
         someObject = null;
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component projectClosed <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component projectClosed <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
 
     @Override
     public void initComponent() {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component initComponent <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component initComponent <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
 
     @Override
     public void disposeComponent() {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component disposeComponent <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> project component disposeComponent <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
 
     @NotNull
