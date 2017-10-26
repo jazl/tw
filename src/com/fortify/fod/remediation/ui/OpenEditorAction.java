@@ -8,6 +8,7 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.testFramework.LightVirtualFile;
@@ -36,12 +37,26 @@ public class OpenEditorAction extends AnAction {
 
         FileType fileType = vf.getFileType();
         System.out.println("fileType = "+fileType);
+
+        FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+        FileType knownFileTypeOrAssociate = fileTypeManager.getKnownFileTypeOrAssociate(vf, project);
+        System.out.println("knownFileTypeOrAssociate = "+knownFileTypeOrAssociate);
+
+        if(knownFileTypeOrAssociate == null) {
+            FileTypeManager.getInstance().registerFileType(StdFileTypes.PLAIN_TEXT, vf.getExtension());
+        }
+
         if(fileType==StdFileTypes.UNKNOWN){
-            vf.setFileType(StdFileTypes.PLAIN_TEXT);
+
+            //FileTypeManager.getInstance().registerFileType(StdFileTypes.PLAIN_TEXT, fileExtensions);
+
+            //vf.setFileType(StdFileTypes.PLAIN_TEXT);
+
+//            FileType knownFileTypeOrAssociate = FileTypeManager.getInstance().getKnownFileTypeOrAssociate(vf, project);
+//            System.out.println("knownFileTypeOrAssociate = "+knownFileTypeOrAssociate);
         }
 
         OpenFileDescriptor fd = new OpenFileDescriptor(project, vf);
-
         java.util.List<FileEditor> fileEditors = fem.openEditor(fd, true);
         System.out.println("fileEditors.size() = "+fileEditors.size());
 
