@@ -1,9 +1,7 @@
-package com.fortify.fod.remediation.scrollhtml;
+package com.fortify.fod.remediation.standalone;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.ScrollPane;
-import java.awt.Scrollbar;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;

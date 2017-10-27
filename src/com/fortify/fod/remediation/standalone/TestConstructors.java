@@ -1,4 +1,4 @@
-package com.fortify.fod.remediation.scrollhtml;
+package com.fortify.fod.remediation.standalone;
 
 /**
  * Created by jazl on 10/6/2017.

@@ -1,4 +1,4 @@
-package com.fortify.fod.remediation.scrollhtml;
+package com.fortify.fod.remediation.standalone;
 
 
 /*
@@ -7,8 +7,6 @@ By John Zukowski
 ISBN: 1-893115-78-X
 Publisher: APress
 */
-
-import oracle.jrockit.jfr.JFR;
 
 import java.awt.BorderLayout;
 import java.awt.Container;

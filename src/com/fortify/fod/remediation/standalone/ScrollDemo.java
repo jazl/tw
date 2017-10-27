@@ -1,4 +1,4 @@
-package com.fortify.fod.remediation.scrollhtml;
+package com.fortify.fod.remediation.standalone;
 
 import javax.swing.*;
 import java.awt.*;
