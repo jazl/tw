@@ -11,7 +11,7 @@ public class VulnTabbedPane extends JTabbedPane {
 
     HashMap<String, VulnFolder> vulnMap = new HashMap<>();
 
-    public void addTab(String title, Component component, VulnFolder folder) {
+    public void addTabPanel(String title, AnalysisResultsTabPanel panel, VulnFolder folder) {
         Icon icon = null;
         try {
             icon = IconLoader.getIcon("/icons/"+title.toLowerCase()+".png");
@@ -19,8 +19,12 @@ public class VulnTabbedPane extends JTabbedPane {
         catch(Exception e) {
             System.out.println("Cannot find icon for "+title);
         }
-        super.addTab(title, icon, component);
+        super.addTab(title, icon, panel);
         vulnMap.put(title, folder);
     }
 
+    public void setGroupByComponent(JComboBox<String> comp) {
+        AnalysisResultsTabPanel tabPanel = (AnalysisResultsTabPanel)getComponent(0);
+        tabPanel.setGroupByComponent(comp);
+    }
 }

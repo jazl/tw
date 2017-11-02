@@ -1,5 +1,6 @@
 package com.fortify.fod.remediation.ui;
 
+import com.fortify.fod.remediation.custom.GroupByComponent;
 import com.fortify.fod.remediation.messages.ChangeActionNotifier;
 import com.fortify.fod.remediation.messages.IssueChangeInfo;
 import com.fortify.fod.remediation.messages.ToolWindowActionListener;
@@ -14,6 +15,7 @@ import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -37,13 +39,14 @@ import java.util.*;
 public class AnalysisResultsToolWindow extends RemediationToolWindowBase implements ToolWindowActionListener {
 
     private VulnTabbedPane tabbedPane;
+    private JComboBox<String> groupByCombo;
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         super.createToolWindowContent(project, toolWindow);
 
         // Webgoat
-        VulnFolder[] folders = new VulnFolder[]{
+        final VulnFolder[] folders = new VulnFolder[]{
                 new VulnFolder("Critical","Critical"),
                 new VulnFolder("High","High"),
                 new VulnFolder("Medium","Medium"),
@@ -62,7 +65,7 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase impleme
         tabbedPane.setModel(tabModel);
 
         for(VulnFolder f:folders) {
-            tabbedPane.addTab(f.getTitle(), new AnalysisResultsTabPanel(f, this));
+            tabbedPane.addTabPanel(f.getTitle(), new AnalysisResultsTabPanel(f, AnalysisResultsToolWindow.this), f);
             //tabbedPane.add(getTabContents());
         }
 
@@ -71,16 +74,33 @@ public class AnalysisResultsToolWindow extends RemediationToolWindowBase impleme
             public void stateChanged(ChangeEvent e) {
                 JTabbedPane sourceTabbedPane = (JTabbedPane) e.getSource();
                 int index = sourceTabbedPane.getSelectedIndex();
-                JPanel selectedPanel = (JPanel)sourceTabbedPane.getSelectedComponent();
+                AnalysisResultsTabPanel selectedPanel = (AnalysisResultsTabPanel)sourceTabbedPane.getSelectedComponent();
                 System.out.println("Tab changed to: " + sourceTabbedPane.getTitleAt(index));
                 //folderLabel = (JLabel)selectedPanel.getComponent(0);
                 //folderLabel.setText(LocalTime.now().toString());
+
+                selectedPanel.setGroupByComponent(GroupByComponent.getInstance());
             }
         });
+
+        createGroupByComponent();
+
+        //tabbedPane.setGroupByComponent(groupByCombo);
 
         panel.add(tabbedPane, BorderLayout.CENTER);
 
         addContent(toolWindow, panel);
+    }
+
+    public void createGroupByComponent() {
+        groupByCombo = new ComboBox<>();
+        DefaultComboBoxModel<String> groupByModel = new DefaultComboBoxModel<>();
+        groupByModel.addElement("analysisType");
+        groupByModel.addElement("assignedUser");
+        groupByModel.addElement("auditPendingAuditorStatus");
+        groupByModel.addElement("auditorStatus");
+        groupByModel.addElement("category");
+        groupByCombo.setModel(groupByModel);
     }
 
     @Override

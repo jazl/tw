@@ -1,5 +1,6 @@
 package com.fortify.fod.remediation.ui;
 
+import com.fortify.fod.remediation.custom.GroupByComponent;
 import com.fortify.fod.remediation.custom.GroupTreeItem;
 import com.fortify.fod.remediation.custom.IssueTreeItem;
 import com.fortify.fod.remediation.custom.VulnNodeCellRender;
@@ -50,6 +51,7 @@ public class AnalysisResultsTabPanel extends JPanel {
     private JLabel folderLabel;
     private String tabTitle;
     private ToolWindowActionListener myListener;
+    private JComboBox<String> groupByCombo;
 
     public AnalysisResultsTabPanel(VulnFolder folder, ToolWindowActionListener listener) {
         myListener = listener;
@@ -151,19 +153,23 @@ public class AnalysisResultsTabPanel extends JPanel {
         gbc_lblGroupBy.gridy = 0;
         filterPanel.add(lblGroupBy, gbc_lblGroupBy);
 
-        JComboBox<String> groupByCombo = new ComboBox<>();
-        DefaultComboBoxModel<String> groupByModel = new DefaultComboBoxModel<>();
-        groupByModel.addElement("analysisType");
-        groupByModel.addElement("assignedUser");
-        groupByModel.addElement("auditPendingAuditorStatus");
-        groupByModel.addElement("auditorStatus");
-        groupByModel.addElement("category");
-        groupByCombo.setModel(groupByModel);
+//        JComboBox<String> groupByCombo = new ComboBox<>();
+//        DefaultComboBoxModel<String> groupByModel = new DefaultComboBoxModel<>();
+//        groupByModel.addElement("analysisType");
+//        groupByModel.addElement("assignedUser");
+//        groupByModel.addElement("auditPendingAuditorStatus");
+//        groupByModel.addElement("auditorStatus");
+//        groupByModel.addElement("category");
+//        groupByCombo.setModel(groupByModel);
+
         GridBagConstraints gbc_comboBox = new GridBagConstraints();
         gbc_comboBox.insets = new Insets(0, 0, 0, 5);
         gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
         gbc_comboBox.gridx = 1;
         gbc_comboBox.gridy = 0;
+
+        //groupByCombo = GroupByComponent.getInstance();
+        groupByCombo = new ComboBox<String>();
         filterPanel.add(groupByCombo, gbc_comboBox);
 
         JButton optionsButton = new JButton();
@@ -333,5 +339,10 @@ public class AnalysisResultsTabPanel extends JPanel {
 
         AnActionEvent e = AnActionEvent.createFromDataContext(ActionPlaces.ACTION_SEARCH, null, DataManager.getInstance().getDataContext(this));
         a.actionPerformed(e);
+    }
+
+    public void setGroupByComponent(JComboBox<String> groupByComponent) {
+        String title = this.tabTitle;
+        groupByCombo = groupByComponent;
     }
 }

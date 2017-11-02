@@ -4,7 +4,6 @@ import com.fortify.fod.remediation.custom.GroupTreeItem;
 import com.fortify.fod.remediation.custom.IssueTreeItem;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
-import org.sonatype.nexus.index.treeview.DefaultTreeNode;
 
 import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
