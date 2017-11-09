@@ -1,6 +1,3 @@
-package com.fortify.fod.remediation.standalone;
-
-
 /*
 Definitive Guide to Swing for Java 2, Second Edition
 By John Zukowski
@@ -8,19 +5,7 @@ ISBN: 1-893115-78-X
 Publisher: APress
 */
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.io.FileReader;
-import java.io.IOException;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.BadLocationException;
@@ -29,6 +14,10 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class LoadSync {
 

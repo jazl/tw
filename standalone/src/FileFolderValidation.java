@@ -1,7 +1,4 @@
-package com.fortify.fod.remediation.standalone;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.File;

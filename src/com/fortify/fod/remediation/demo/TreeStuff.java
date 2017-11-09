@@ -1,4 +1,4 @@
-package com.fortify.fod.remediation.standalone;
+package com.fortify.fod.remediation.demo;
 
 import com.fortify.fod.remediation.custom.GroupTreeItem;
 import com.fortify.fod.remediation.custom.IssueTreeItem;

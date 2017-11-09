@@ -1,16 +1,9 @@
-package com.fortify.fod.remediation.standalone;
-
-import java.awt.BorderLayout;
-import java.awt.Container;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
+import javax.swing.*;
 import javax.swing.text.Element;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
+import java.awt.*;
 
 public class Main extends JFrame {
 
