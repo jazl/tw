@@ -2,10 +2,12 @@ package com.fortify.fod.remediation.demo;
 
 import com.fortify.fod.remediation.custom.GroupTreeItem;
 import com.fortify.fod.remediation.custom.IssueTreeItem;
+import com.fortify.fod.remediation.custom.VulnNodeCellRender;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.*;
@@ -29,28 +31,30 @@ public class TreeStuff extends JFrame {
     private Enumeration<TreePath> expandedDescendants;
 
     public TreeStuff() {
-        setSize(400,400);
 
+        initData();
+        setSize(600,600);
         JPanel panel = new JPanel(new BorderLayout());
 
-        panel.add(new JBScrollPane(getTree()), BorderLayout.CENTER);
+        panel.add(getTreePanel(), BorderLayout.CENTER);
         panel.add(getControlsPanel(), BorderLayout.SOUTH);
 
         add(panel);
     }
 
-    private Component getTree() {
+    private Component getTreePanel() {
         JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(new EmptyBorder(5,5,5,5));
 
         tree = new Tree();
 
         root = new DefaultMutableTreeNode();
         TreeModel model = new DefaultTreeModel(root);
 
-        createNodes(root,1234);
+        createCategoryNodes(root,1234);
 
         tree.setModel(model);
-
+        tree.setCellRenderer(new VulnNodeCellRender());
         rootPath = new TreePath(root);
 
         tree.addTreeWillExpandListener(new TreeWillExpandListener() {
@@ -73,7 +77,7 @@ public class TreeStuff extends JFrame {
     private Component getControlsPanel() {
         JPanel panel = new JPanel();
 
-        JButton testButton = new JButton("Test");
+        JButton testButton = new JButton("Save Opened Nodes");
         testButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -82,16 +86,21 @@ public class TreeStuff extends JFrame {
             }
         });
 
-        JButton openButton = new JButton("Open");
+        JButton openButton = new JButton("Open Nodes");
         openButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                while (expandedDescendants.hasMoreElements()) {
-                    TreePath treePath = expandedDescendants.nextElement();
-                    if(treePath != null) {
-                        System.out.println("expanding path: "+treePath);
-                        tree.expandPath(treePath);
+                if(expandedDescendants!=null) {
+                    while (expandedDescendants.hasMoreElements()) {
+                        TreePath treePath = expandedDescendants.nextElement();
+                        if(treePath != null) {
+                            System.out.println("expanding path: "+treePath);
+                            tree.expandPath(treePath);
+                        }
                     }
+                }
+                else {
+                    System.out.println("No opened nodes were saved");
                 }
             }
         });
@@ -102,7 +111,7 @@ public class TreeStuff extends JFrame {
         return panel;
     }
 
-    private void createNodes(DefaultMutableTreeNode root, int hashCode) {
+    private void createCategoryNodes(DefaultMutableTreeNode root, int hashCode) {
 
         HashMap<String, ArrayList> issues;
         ArrayList<String> traceNodes;
@@ -124,16 +133,13 @@ public class TreeStuff extends JFrame {
         traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
         issues = new HashMap<>();
         issues.put("Exec.java:103", traceNodes);
-        root.add(createGroupingNodeAndChildren("Cookie Security: Cookie not Sent Over SSL (2) - "+hashCode, issues));
-        root.add(createGroupingNodeAndChildren("Log Forging (2)", issues));
-        root.add(createGroupingNodeAndChildren("Null Reference(2)", issues));
-        root.add(createGroupingNodeAndChildren("Null Reference(107)", issues));
-        root.add(createGroupingNodeAndChildren("Password Management: Empty Password (3)", issues));
-        root.add(createGroupingNodeAndChildren("Password Management: Hardcoded Password (13)", issues));
-        root.add(createGroupingNodeAndChildren("Password Management: Password in Configuration File (1)", issues));
-        root.add(createGroupingNodeAndChildren("Privacy Violation (18)", issues));
-        root.add(createGroupingNodeAndChildren("SQL Injection (11)", issues));
-        root.add(createGroupingNodeAndChildren("Weak Encryption (4)", issues));
+
+        categoriesList.forEach(cat -> root.add(createCategoryNode(cat)));
+    }
+
+    private DefaultMutableTreeNode createCategoryNode(GroupTreeItem categoryItem) {
+        final DefaultMutableTreeNode groupingNode = new DefaultMutableTreeNode(categoryItem);
+        return groupingNode;
     }
 
     private DefaultMutableTreeNode createGroupingNodeAndChildren(String groupingNodeName, HashMap<String, ArrayList> issues) {
@@ -161,4 +167,29 @@ public class TreeStuff extends JFrame {
         TreeStuff ts = new TreeStuff();
         ts.setVisible(true);
     }
+
+    class CategoryItem {
+        private int categoryId;
+        private String categoryName;
+
+        public CategoryItem(int categoryId, String categoryName) {
+            this.categoryId = categoryId;
+            this.categoryName = categoryName;
+        }
+    }
+
+    private void initData() {
+        categoriesList = new ArrayList<>();
+        categoriesList.add(new GroupTreeItem("100", "Cookie Security: Cookie not Sent Over SSL (2)"));
+        categoriesList.add(new GroupTreeItem("200", "Log Forging (2))"));
+        categoriesList.add(new GroupTreeItem("300", "Null Reference"));
+        categoriesList.add(new GroupTreeItem("400", "Password Management: Empty Password"));
+        categoriesList.add(new GroupTreeItem("500", "Password Management: Hardcoded Password (13)"));
+        categoriesList.add(new GroupTreeItem("600", "Password Management: Password in Configuration File"));
+        categoriesList.add(new GroupTreeItem("700", "Privacy Violation (18)"));
+        categoriesList.add(new GroupTreeItem("800", "SQL Injection (11)"));
+        categoriesList.add(new GroupTreeItem("900", "Weak Encryption (4)"));
+    }
+    private ArrayList<GroupTreeItem> categoriesList;
+
 }
