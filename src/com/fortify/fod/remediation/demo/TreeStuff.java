@@ -9,6 +9,8 @@ import com.intellij.ui.treeStructure.Tree;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.*;
 import java.awt.*;
@@ -69,6 +71,31 @@ public class TreeStuff extends JFrame {
             }
         });
 
+        model.addTreeModelListener(new TreeModelListener() {
+            @Override
+            public void treeNodesChanged(TreeModelEvent e) {
+                System.out.println("treeNodesChanged "+e.getTreePath().getLastPathComponent());
+            }
+
+            @Override
+            public void treeNodesInserted(TreeModelEvent e) {
+                System.out.println("treeNodesInserted "+e.getTreePath().getLastPathComponent());
+
+            }
+
+            @Override
+            public void treeNodesRemoved(TreeModelEvent e) {
+                System.out.println("treeNodesRemoved "+e.getTreePath().getLastPathComponent());
+
+            }
+
+            @Override
+            public void treeStructureChanged(TreeModelEvent e) {
+                System.out.println("treeStructureChanged "+e.getTreePath().getLastPathComponent());
+
+            }
+        });
+
         panel.add(new JBScrollPane(tree), BorderLayout.CENTER);
 
         return panel;
@@ -105,8 +132,23 @@ public class TreeStuff extends JFrame {
             }
         });
 
+        JButton deleteButton = new JButton("Delete Node");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultMutableTreeNode node;
+                DefaultTreeModel model = (DefaultTreeModel) (tree.getModel());
+                TreePath[] paths = tree.getSelectionPaths();
+                for (int i = 0; i < paths.length; i++) {
+                    node = (DefaultMutableTreeNode) (paths[i].getLastPathComponent());
+                    model.removeNodeFromParent(node);
+                }
+            }
+        });
+
         panel.add(testButton);
         panel.add(openButton);
+        panel.add(deleteButton);
 
         return panel;
     }
