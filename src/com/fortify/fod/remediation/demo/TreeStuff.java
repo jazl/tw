@@ -8,10 +8,7 @@ import com.intellij.ui.treeStructure.Tree;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeWillExpandListener;
+import javax.swing.event.*;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -96,11 +93,38 @@ public class TreeStuff extends JFrame {
             }
         });
 
+        tree.setComponentPopupMenu(new TreePopUpMenu());
         panel.add(new JBScrollPane(tree), BorderLayout.CENTER);
 
         return panel;
     }
 
+    class TreePopUpMenu extends JPopupMenu {
+        public TreePopUpMenu() {
+            add(new JMenuItem("Expand all"));
+            add(new JMenuItem("Collapse all"));
+            add(new JMenuItem("Refresh"));
+            addPopupMenuListener(new PopupMenuListener() {
+                @Override
+                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                    System.out.println("popupMenuWillBecomeVisible");
+                    TreePopUpMenu source = (TreePopUpMenu) e.getSource();
+                    JTree invoker = (JTree) source.getInvoker();
+                    TreePath selectionPath = invoker.getSelectionPath();
+                }
+
+                @Override
+                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+
+                }
+
+                @Override
+                public void popupMenuCanceled(PopupMenuEvent e) {
+
+                }
+            });
+        }
+    }
     private Component getControlsPanel() {
         JPanel panel = new JPanel();
 
