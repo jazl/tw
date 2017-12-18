@@ -13,9 +13,7 @@ import java.util.List;
  */
 
 /**
- * something on master to rebase to my personal branch!!!!
- * something on master to rebase to my personal branch!!!!
- * something on master to rebase to my personal branch!!!!
+ * something on master to MERGE to my personal branch!
  */
 public class ListStuff extends JFrame {
 
