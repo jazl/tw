@@ -1,6 +1,8 @@
 package com.fortify.fod.remediation.ui;
 
 import com.fortify.fod.remediation.messages.IssueChangeInfo;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.wm.ToolWindow;
@@ -13,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class AuditSummaryToolWindow extends RemediationToolWindowBase {
 
@@ -69,6 +73,67 @@ public class AuditSummaryToolWindow extends RemediationToolWindowBase {
         commentList.setModel(getHistory(null));
         panel.add(new JBScrollPane(commentList), BorderLayout.CENTER);
 
+        panel.add(createButtonPanel(), BorderLayout.SOUTH);
+        return panel;
+    }
+
+    private JPanel createButtonPanel() {
+        JPanel panel = new JPanel();
+
+        JRadioButton rbNon = new JRadioButton("NON_MODAL");
+        rbNon.setSelected(true);
+        JRadioButton rbAny = new JRadioButton("any()");
+        JRadioButton rbCurrent = new JRadioButton("current()");
+        JRadioButton rbDefault = new JRadioButton("default()");
+        JRadioButton rbForComponent = new JRadioButton("stateForComponent");
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(rbNon);
+        buttonGroup.add(rbAny);
+        buttonGroup.add(rbCurrent);
+        buttonGroup.add(rbDefault);
+        buttonGroup.add(rbForComponent);
+
+        panel.add(rbNon);
+        panel.add(rbAny);
+        panel.add(rbCurrent);
+        panel.add(rbDefault);
+        panel.add(rbForComponent);
+
+        JButton button1 = new JButton("ModalityState");
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ModalityState ms = ModalityState.NON_MODAL;
+                if(rbAny.isSelected()) {
+                    ms = ModalityState.any();
+                }
+                else if(rbCurrent.isSelected()) {
+                    ms = ModalityState.current();
+                }
+                else if(rbDefault.isSelected()) {
+                    ms = ModalityState.defaultModalityState();
+                }
+                else if(rbForComponent.isSelected()) {
+                    ms = ModalityState.stateForComponent(AuditSummaryToolWindow.this.getDefaultToolWindowContentPanel());
+                }
+                System.out.println("MS: ModalityState = "+ms.toString());
+                ApplicationManager.getApplication().invokeAndWait(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            System.out.println("MS: in run block...waiting");
+                            Thread.sleep(3000);
+                            System.out.println("MS: in run block...done");
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }, ms);
+                System.out.println("MS: after invokeAndWait");
+            }
+        });
+        panel.add(button1);
         return panel;
     }
 
