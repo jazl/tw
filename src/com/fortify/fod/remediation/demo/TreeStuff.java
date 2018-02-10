@@ -21,7 +21,7 @@ import java.util.function.BiConsumer;
  */
 public class TreeStuff extends JFrame {
 
-    private Tree tree;
+    private JTree _tree;
     private DefaultMutableTreeNode root;
     private TreePath rootPath;
 
@@ -45,18 +45,18 @@ public class TreeStuff extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(new EmptyBorder(5,5,5,5));
 
-        tree = new Tree();
+        _tree = new JTree();
 
         root = new DefaultMutableTreeNode();
         TreeModel model = new DefaultTreeModel(root);
 
         createCategoryNodes(root,1234);
 
-        tree.setModel(model);
-        tree.setCellRenderer(new VulnNodeCellRender());
+        _tree.setModel(model);
+        _tree.setCellRenderer(new VulnNodeCellRender());
         rootPath = new TreePath(root);
 
-        tree.addTreeWillExpandListener(new TreeWillExpandListener() {
+        _tree.addTreeWillExpandListener(new TreeWillExpandListener() {
             @Override
             public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
                 expandedTreePaths.add(event.getPath());
@@ -93,8 +93,8 @@ public class TreeStuff extends JFrame {
             }
         });
 
-        tree.setComponentPopupMenu(new TreePopUpMenu());
-        panel.add(new JBScrollPane(tree), BorderLayout.CENTER);
+        _tree.setComponentPopupMenu(new TreePopUpMenu());
+        panel.add(new JBScrollPane(_tree), BorderLayout.CENTER);
 
         return panel;
     }
@@ -103,6 +103,17 @@ public class TreeStuff extends JFrame {
         public TreePopUpMenu() {
             add(new JMenuItem("Expand all"));
             add(new JMenuItem("Collapse all"));
+
+            JMenuItem search = new JMenuItem("Search");
+            search.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String inputVal = JOptionPane.showInputDialog("Search for", "test");
+                    System.out.println(inputVal);
+                }
+            });
+            add(search);
+
             add(new JMenuItem("Refresh"));
             addPopupMenuListener(new PopupMenuListener() {
                 @Override
@@ -133,7 +144,7 @@ public class TreeStuff extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("openButton clicked, size = "+expandedTreePaths.size());
-                expandedDescendants = tree.getExpandedDescendants(rootPath);
+                expandedDescendants = _tree.getExpandedDescendants(rootPath);
             }
         });
 
@@ -146,7 +157,7 @@ public class TreeStuff extends JFrame {
                         TreePath treePath = expandedDescendants.nextElement();
                         if(treePath != null) {
                             System.out.println("expanding path: "+treePath);
-                            tree.expandPath(treePath);
+                            _tree.expandPath(treePath);
                         }
                     }
                 }
@@ -161,8 +172,8 @@ public class TreeStuff extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 DefaultMutableTreeNode node;
-                DefaultTreeModel model = (DefaultTreeModel) (tree.getModel());
-                TreePath[] paths = tree.getSelectionPaths();
+                DefaultTreeModel model = (DefaultTreeModel) (_tree.getModel());
+                TreePath[] paths = _tree.getSelectionPaths();
                 for (int i = 0; i < paths.length; i++) {
                     node = (DefaultMutableTreeNode) (paths[i].getLastPathComponent());
                     model.removeNodeFromParent(node);
@@ -170,11 +181,44 @@ public class TreeStuff extends JFrame {
             }
         });
 
+        JButton infoButton = new JButton("Info");
+        infoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showTreeInfo();
+            }
+        });
+
         panel.add(testButton);
         panel.add(openButton);
         panel.add(deleteButton);
+        panel.add(infoButton);
 
         return panel;
+    }
+
+    private void showTreeInfo() {
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) _tree.getModel().getRoot();
+        printTreeNode(root);
+    }
+
+    private void printTreeNode(DefaultMutableTreeNode node) {
+        int childCount = node.getChildCount();
+
+        System.out.println("---" + node.toString() + "---");
+
+        for (int i = 0; i < childCount; i++) {
+
+            DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) node.getChildAt(i);
+            if (childNode.getChildCount() > 0) {
+                printTreeNode(childNode);
+            } else {
+                System.out.println(childNode.toString());
+            }
+
+        }
+
+        System.out.println("+++" + node.toString() + "+++");
     }
 
     private void createCategoryNodes(DefaultMutableTreeNode root, int hashCode) {
