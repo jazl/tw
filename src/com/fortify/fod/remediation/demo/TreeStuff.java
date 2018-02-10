@@ -3,9 +3,7 @@ package com.fortify.fod.remediation.demo;
 import com.fortify.fod.remediation.custom.GroupTreeItem;
 import com.fortify.fod.remediation.custom.IssueTreeItem;
 import com.fortify.fod.remediation.custom.VulnNodeCellRender;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.treeStructure.Tree;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -28,7 +26,8 @@ public class TreeStuff extends JFrame {
 
     private Set<TreePath> expandedTreePaths = new HashSet<>();
 
-    private Enumeration<TreePath> expandedDescendants;
+    private ArrayList<TreePath> expandedTreePathList;
+    private ArrayList<String> expandedNodeNameList;
 
     public TreeStuff() {
 
@@ -46,9 +45,11 @@ public class TreeStuff extends JFrame {
         _tree = new JTree();
 
         root = new DefaultMutableTreeNode();
-        TreeModel model = new DefaultTreeModel(root);
+        DefaultTreeModel model = new DefaultTreeModel(root);
 
-        createCategoryNodes(root,1234);
+        //createCategoryNodes(root,1234);
+
+        createCategoryNodesInModel(model,1234);
 
         _tree.setModel(model);
         _tree.setCellRenderer(new VulnNodeCellRender());
@@ -66,30 +67,30 @@ public class TreeStuff extends JFrame {
             }
         });
 
-        model.addTreeModelListener(new TreeModelListener() {
-            @Override
-            public void treeNodesChanged(TreeModelEvent e) {
-                System.out.println("treeNodesChanged "+e.getTreePath().getLastPathComponent());
-            }
-
-            @Override
-            public void treeNodesInserted(TreeModelEvent e) {
-                System.out.println("treeNodesInserted "+e.getTreePath().getLastPathComponent());
-
-            }
-
-            @Override
-            public void treeNodesRemoved(TreeModelEvent e) {
-                System.out.println("treeNodesRemoved "+e.getTreePath().getLastPathComponent());
-
-            }
-
-            @Override
-            public void treeStructureChanged(TreeModelEvent e) {
-                System.out.println("treeStructureChanged "+e.getTreePath().getLastPathComponent());
-
-            }
-        });
+//        model.addTreeModelListener(new TreeModelListener() {
+//            @Override
+//            public void treeNodesChanged(TreeModelEvent e) {
+//                System.out.println("treeNodesChanged "+e.getTreePath().getLastPathComponent());
+//            }
+//
+//            @Override
+//            public void treeNodesInserted(TreeModelEvent e) {
+//                System.out.println("treeNodesInserted "+e.getTreePath().getLastPathComponent());
+//
+//            }
+//
+//            @Override
+//            public void treeNodesRemoved(TreeModelEvent e) {
+//                System.out.println("treeNodesRemoved "+e.getTreePath().getLastPathComponent());
+//
+//            }
+//
+//            @Override
+//            public void treeStructureChanged(TreeModelEvent e) {
+//                System.out.println("treeStructureChanged "+e.getTreePath().getLastPathComponent());
+//
+//            }
+//        });
 
         _tree.setComponentPopupMenu(new TreePopUpMenu());
     }
@@ -104,10 +105,66 @@ public class TreeStuff extends JFrame {
         return panel;
     }
 
+    private void saveExpandedNodes() {
+        expandedTreePathList = Collections.list(_tree.getExpandedDescendants(rootPath));
+        System.out.println("Saved "+expandedTreePathList.size()+" expanded nodes");
+    }
+
+    private void openSavedNodes() {
+        if(expandedTreePathList!=null && expandedTreePathList.size()>0) {
+            System.out.println("Opening "+expandedTreePathList.size()+" saved nodes");
+            for(TreePath tp:expandedTreePathList) {
+                _tree.expandPath(tp);
+            }
+        }
+        else {
+            System.out.println("No opened nodes were saved");
+        }
+    }
+
     class TreePopUpMenu extends JPopupMenu {
         public TreePopUpMenu() {
-            add(new JMenuItem("Expand all"));
-            add(new JMenuItem("Collapse all"));
+            JMenuItem expandAll = new JMenuItem("Expand all");
+            expandAll.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    for(int i=0; i<_tree.getRowCount(); i++) {
+                        _tree.expandRow(i);
+                    }
+                }
+            });
+            add(expandAll);
+
+            JMenuItem collapseAll = new JMenuItem("Collapse all");
+            collapseAll.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    for(int i=_tree.getRowCount(); i>1; i--) {
+                        _tree.collapseRow(i);
+                    }
+                }
+            });
+            add(collapseAll);
+
+            add(new JSeparator());
+
+            JMenuItem saveExpandedNodes = new JMenuItem("Save expanded nodes");
+            saveExpandedNodes.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    saveExpandedNodes();
+                }
+            });
+            add(saveExpandedNodes);
+
+            JMenuItem openSavedNodes = new JMenuItem("Reopen saved nodes");
+            openSavedNodes.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    openSavedNodes();
+                }
+            });
+            add(openSavedNodes);
 
             JMenuItem search = new JMenuItem("Search");
             search.addActionListener(new ActionListener() {
@@ -119,7 +176,65 @@ public class TreeStuff extends JFrame {
             });
             add(search);
 
+            add(new JSeparator());
+
             add(new JMenuItem("Refresh"));
+
+            JMenuItem rebuildTreeNew = new JMenuItem("Rebuild Tree using new model");
+            rebuildTreeNew.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("Rebuilding tree w/ new model!");
+                            DefaultMutableTreeNode root = (DefaultMutableTreeNode)_tree.getModel().getRoot();
+                            DefaultTreeModel model = new DefaultTreeModel(root);
+                            _tree.setModel(model);
+                            root.removeAllChildren();
+                            //createCategoryNodes(root,1234);
+                            createCategoryNodesInModel(model, 8888);
+                            model.reload();
+                        }
+                    });
+                }
+            });
+            add(rebuildTreeNew);
+
+            JMenuItem rebuildTreeRemove = new JMenuItem("Rebuild Tree remove only");
+            rebuildTreeRemove.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("Rebuilding tree (removing nodes only)");
+                            DefaultTreeModel _treeModel = (DefaultTreeModel)_tree.getModel();
+                            DefaultMutableTreeNode root = (DefaultMutableTreeNode)_treeModel.getRoot();
+                            //root.removeAllChildren();
+                            //createCategoryNodes(root,1234);
+                            createCategoryNodesInModel(_treeModel, 8888);
+                            _treeModel.reload();
+                        }
+                    });
+                }
+            });
+            add(rebuildTreeRemove);
+
+            JMenuItem deleteModelNodes = new JMenuItem("Delete all nodes (null out model)");
+            deleteModelNodes.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            _tree.setModel(null);
+                        }
+                    });
+                }
+            });
+            add(deleteModelNodes);
+
             addPopupMenuListener(new PopupMenuListener() {
                 @Override
                 public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -144,34 +259,6 @@ public class TreeStuff extends JFrame {
     private Component getControlsPanel() {
         JPanel panel = new JPanel();
 
-        JButton testButton = new JButton("Save Opened Nodes");
-        testButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("openButton clicked, size = "+expandedTreePaths.size());
-                expandedDescendants = _tree.getExpandedDescendants(rootPath);
-            }
-        });
-
-        JButton openButton = new JButton("Open Nodes");
-        openButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(expandedDescendants!=null) {
-                    while (expandedDescendants.hasMoreElements()) {
-                        TreePath treePath = expandedDescendants.nextElement();
-                        if(treePath != null) {
-                            System.out.println("expanding path: "+treePath);
-                            _tree.expandPath(treePath);
-                        }
-                    }
-                }
-                else {
-                    System.out.println("No opened nodes were saved");
-                }
-            }
-        });
-
         JButton deleteButton = new JButton("Delete Node");
         deleteButton.addActionListener(new ActionListener() {
             @Override
@@ -186,24 +273,6 @@ public class TreeStuff extends JFrame {
             }
         });
 
-        JButton rebuildTree = new JButton("Rebuild");
-        rebuildTree.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println("Rebuilding tree!");
-                        DefaultMutableTreeNode root = (DefaultMutableTreeNode)_tree.getModel().getRoot();
-                        DefaultTreeModel model = new DefaultTreeModel(root);
-                        _tree.setModel(model);
-                        root.removeAllChildren();
-                        createCategoryNodes(root,1234);
-                        model.reload();
-                    }
-                });
-            }
-        });
 
         JButton infoButton = new JButton("Info");
         infoButton.addActionListener(new ActionListener() {
@@ -213,10 +282,7 @@ public class TreeStuff extends JFrame {
             }
         });
 
-        panel.add(testButton);
-        panel.add(openButton);
         panel.add(deleteButton);
-        panel.add(rebuildTree);
         panel.add(infoButton);
 
         return panel;
@@ -270,6 +336,33 @@ public class TreeStuff extends JFrame {
         issues.put("Exec.java:103", traceNodes);
 
         categoriesList.forEach(cat -> root.add(createCategoryNode(cat)));
+    }
+
+    private void createCategoryNodesInModel(DefaultTreeModel model, int hashCode) {
+
+        HashMap<String, ArrayList> issues;
+        ArrayList<String> traceNodes;
+
+        traceNodes = new ArrayList<>();
+        traceNodes.add("ParameterParser.java:593 - getParameterValues(return)");
+        traceNodes.add("ParameterParser.java:593 - Return");
+        traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
+        issues = new HashMap<>();
+        issues.put("Exec.java:103", traceNodes);
+        for(int i=1; i<=50; i++) {
+            issues.put("Exec.java:"+i, traceNodes);
+        }
+        DefaultMutableTreeNode groupingNodeAndChildren = createGroupingNodeAndChildren("Command Injection (3) - " + hashCode, issues);
+        model.insertNodeInto(groupingNodeAndChildren,(DefaultMutableTreeNode)model.getRoot(),0);
+
+//        traceNodes = new ArrayList<>();
+//        traceNodes.add("ParameterParser.java:593 - getParameterValues(return)");
+//        traceNodes.add("ParameterParser.java:593 - Return");
+//        traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
+//        issues = new HashMap<>();
+//        issues.put("Exec.java:103", traceNodes);
+//
+//        categoriesList.forEach(cat -> root.add(createCategoryNode(cat)));
     }
 
     private DefaultMutableTreeNode createCategoryNode(GroupTreeItem categoryItem) {
