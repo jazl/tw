@@ -3,6 +3,7 @@ package com.fortify.fod.remediation.demo;
 import com.fortify.fod.remediation.custom.GroupTreeItem;
 import com.fortify.fod.remediation.custom.IssueTreeItem;
 import com.fortify.fod.remediation.custom.VulnNodeCellRender;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
 
@@ -41,10 +42,7 @@ public class TreeStuff extends JFrame {
         add(panel);
     }
 
-    private Component getTreePanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(new EmptyBorder(5,5,5,5));
-
+    private void buildTree() {
         _tree = new JTree();
 
         root = new DefaultMutableTreeNode();
@@ -94,6 +92,13 @@ public class TreeStuff extends JFrame {
         });
 
         _tree.setComponentPopupMenu(new TreePopUpMenu());
+    }
+
+    private Component getTreePanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(new EmptyBorder(5,5,5,5));
+
+        buildTree();
         panel.add(new JBScrollPane(_tree), BorderLayout.CENTER);
 
         return panel;
@@ -181,6 +186,25 @@ public class TreeStuff extends JFrame {
             }
         });
 
+        JButton rebuildTree = new JButton("Rebuild");
+        rebuildTree.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("Rebuilding tree!");
+                        DefaultMutableTreeNode root = (DefaultMutableTreeNode)_tree.getModel().getRoot();
+                        DefaultTreeModel model = new DefaultTreeModel(root);
+                        _tree.setModel(model);
+                        root.removeAllChildren();
+                        createCategoryNodes(root,1234);
+                        model.reload();
+                    }
+                });
+            }
+        });
+
         JButton infoButton = new JButton("Info");
         infoButton.addActionListener(new ActionListener() {
             @Override
@@ -192,6 +216,7 @@ public class TreeStuff extends JFrame {
         panel.add(testButton);
         panel.add(openButton);
         panel.add(deleteButton);
+        panel.add(rebuildTree);
         panel.add(infoButton);
 
         return panel;
