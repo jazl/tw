@@ -3,6 +3,9 @@ package com.fortify.fod.remediation.standalone;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -20,6 +23,8 @@ public class DynamicTree extends JPanel {
     protected JTree tree;
     private Toolkit toolkit = Toolkit.getDefaultToolkit();
 
+    private ArrayList<TreePath> expandedDescendants;
+
     public DynamicTree() {
         super(new GridLayout(1,0));
 
@@ -35,6 +40,16 @@ public class DynamicTree extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(tree);
         add(scrollPane);
+    }
+
+    public void saveExpandedNodes() {
+        expandedDescendants = Collections.list(tree.getExpandedDescendants(tree.getPathForRow(0)));
+    }
+
+    public void restoreExpandedNodes() {
+        for(TreePath t:expandedDescendants) {
+            tree.expandPath(t);
+        }
     }
 
     public void createNewModel() {

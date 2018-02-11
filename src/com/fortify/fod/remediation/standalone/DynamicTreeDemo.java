@@ -22,6 +22,8 @@ public class DynamicTreeDemo extends JPanel implements ActionListener {
     private static String REMOVE_COMMAND = "remove";
     private static String CLEAR_COMMAND = "clear";
     private static String NEW_MODEL = "new_model";
+    private static String SAVE_EXP = "save_exp";
+    private static String RESTORE_EXP = "restore_exp";
 
     private DynamicTree treePanel;
 
@@ -48,6 +50,14 @@ public class DynamicTreeDemo extends JPanel implements ActionListener {
         newModel.setActionCommand(NEW_MODEL);
         newModel.addActionListener(this);
 
+        JButton saveX = new JButton("Save X");
+        saveX.setActionCommand(SAVE_EXP);
+        saveX.addActionListener(this);
+
+        JButton restoreX = new JButton("Restore X");
+        restoreX.setActionCommand(RESTORE_EXP);
+        restoreX.addActionListener(this);
+
         //Lay everything out.
         treePanel.setPreferredSize(new Dimension(300, 150));
         add(treePanel, BorderLayout.CENTER);
@@ -57,6 +67,9 @@ public class DynamicTreeDemo extends JPanel implements ActionListener {
         panel.add(removeButton);
         panel.add(clearButton);
         panel.add(newModel);
+        panel.add(saveX);
+        panel.add(restoreX);
+
         add(panel, BorderLayout.SOUTH);
     }
 
@@ -96,8 +109,11 @@ public class DynamicTreeDemo extends JPanel implements ActionListener {
             treePanel.clear();
         } else if (NEW_MODEL.equals(command)) {
             treePanel.createNewModel();
+        } else if (SAVE_EXP.equals(command)) {
+            treePanel.saveExpandedNodes();
+        } else if (RESTORE_EXP.equals(command)) {
+            treePanel.restoreExpandedNodes();
         }
-
     }
 
     /**
