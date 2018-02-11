@@ -26,8 +26,11 @@ public class TreeStuff extends JFrame {
 
     private Set<TreePath> expandedTreePaths = new HashSet<>();
 
+    private ArrayList<TreePath> expandedTreePathListOld;
     private ArrayList<TreePath> expandedTreePathList;
     private ArrayList<String> expandedNodeNameList;
+
+    private DefaultTreeModel treeModelOld;
 
     public TreeStuff() {
 
@@ -60,12 +63,12 @@ public class TreeStuff extends JFrame {
         _tree.addTreeWillExpandListener(new TreeWillExpandListener() {
             @Override
             public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
-                expandedTreePaths.add(event.getPath());
+                //expandedTreePaths.add(event.getPath());
             }
 
             @Override
             public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
-                expandedTreePaths.remove(event.getPath());
+                //expandedTreePaths.remove(event.getPath());
             }
         });
 
@@ -108,7 +111,11 @@ public class TreeStuff extends JFrame {
     }
 
     private void saveExpandedNodes() {
+        expandedTreePathListOld = expandedTreePathList;
         expandedTreePathList = Collections.list(_tree.getExpandedDescendants(rootPath));
+
+        boolean test = expandedTreePathListOld.get(0).toString().equals(expandedTreePathList.get(0).toString());
+
         System.out.println("Saved "+expandedTreePathList.size()+" expanded nodes");
     }
 
@@ -191,6 +198,24 @@ public class TreeStuff extends JFrame {
 
             add(new JMenuItem("Refresh"));
 
+            JMenuItem restoreModel = new JMenuItem("Restore previous model");
+            restoreModel.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("Setting tree to old model...");
+                            treeModelOld.setRoot((DefaultMutableTreeNode)_tree.getModel().getRoot());
+                            _tree.setModel(treeModelOld);
+                            treeModelOld.reload();
+                            System.out.println("model hashcode = "+treeModelOld.hashCode());
+                        }
+                    });
+                }
+            });
+            add(restoreModel);
+
             JMenuItem rebuildTreeNew = new JMenuItem("Rebuild Tree using new model");
             rebuildTreeNew.addActionListener(new ActionListener() {
                 @Override
@@ -199,8 +224,11 @@ public class TreeStuff extends JFrame {
                         @Override
                         public void run() {
                             System.out.println("Rebuilding tree w/ new model!");
+                            treeModelOld = (DefaultTreeModel)_tree.getModel();
+
                             DefaultMutableTreeNode root = (DefaultMutableTreeNode)_tree.getModel().getRoot();
                             DefaultTreeModel model = new DefaultTreeModel(root);
+                            System.out.println("model hashcode = "+model.hashCode());
                             _tree.setModel(model);
                             root.removeAllChildren();
                             //createCategoryNodes(root,1234);
