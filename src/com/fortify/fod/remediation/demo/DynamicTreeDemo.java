@@ -1,4 +1,4 @@
-package com.fortify.fod.remediation.standalone;
+package com.fortify.fod.remediation.demo;
 
 /*
  * This code is based on an example provided by Richard Stanford,

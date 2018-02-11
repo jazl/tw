@@ -1,4 +1,4 @@
-package com.fortify.fod.remediation.standalone;
+package com.fortify.fod.remediation.demo;
 
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -43,7 +43,7 @@ public class DynamicTree extends JPanel {
     }
 
     public void saveExpandedNodes() {
-        expandedDescendants = Collections.list(tree.getExpandedDescendants(tree.getPathForRow(0)));
+        expandedDescendants = Collections.list(tree.getExpandedDescendants(new TreePath(rootNode)));
     }
 
     public void restoreExpandedNodes() {
@@ -52,17 +52,62 @@ public class DynamicTree extends JPanel {
         }
     }
 
+    public void restoreExpandedNodes2() {
+        for(int i=0; i<tree.getRowCount(); i++) {
+            tree.expandRow(i);
+        }
+        ArrayList<TreePath> expandedDescendantsCurrent = Collections.list(tree.getExpandedDescendants(new TreePath(rootNode)));
+        for(TreePath t:expandedDescendants) {
+            tree.expandPath(t);
+        }
+    }
+
     public void createNewModel() {
-        treeModel = new DefaultTreeModel(rootNode);
+        //treeModel = new DefaultTreeModel(rootNode);
         rootNode.removeAllChildren();
 
-        populateTreeModel();
+        //populateTreeModel();
+//
+//        treeModel.insertNodeInto(new DefaultMutableTreeNode("new node 1 @ "+LocalDateTime.now()),rootNode,0);
+//        treeModel.insertNodeInto(new DefaultMutableTreeNode("new node 2 @ "+LocalDateTime.now()),rootNode,1);
+//        treeModel.insertNodeInto(new DefaultMutableTreeNode("new node 3 @ "+LocalDateTime.now()),rootNode,2);
 
-        treeModel.insertNodeInto(new DefaultMutableTreeNode("new node 1 @ "+LocalDateTime.now()),rootNode,0);
-        treeModel.insertNodeInto(new DefaultMutableTreeNode("new node 2 @ "+LocalDateTime.now()),rootNode,1);
-        treeModel.insertNodeInto(new DefaultMutableTreeNode("new node 3 @ "+LocalDateTime.now()),rootNode,2);
-        tree.setModel(treeModel);
-        treeModel.reload();
+        saveExpandedNodes();
+
+        updateTreeModel();
+
+        //treeModel.reload();
+        //tree.setModel(treeModel);
+        restoreExpandedNodes();
+
+        //treeModel.reload();
+        //tree.setModel(treeModel) ;
+    }
+
+    public void updateTreeModel() {
+        DefaultTreeModel modelToUpdate = (DefaultTreeModel)tree.getModel();
+        //((DefaultMutableTreeNode)tree.getModel().getRoot()).removeAllChildren();
+
+        LocalDateTime now = LocalDateTime.now();
+        String p1Name = new String("Parent 1 @ "+now);
+        String p2Name = new String("Parent 2 @ "+now);
+        String c1Name = new String("Child 1 @ "+now);
+        String c2Name = new String("Child 2 @ "+now);
+
+        DefaultMutableTreeNode p1, p2, c1, c2;
+
+        p1 = new DefaultMutableTreeNode(p1Name);
+        modelToUpdate.insertNodeInto(p1,rootNode, 0);
+        p2 = new DefaultMutableTreeNode(p2Name);
+        modelToUpdate.insertNodeInto(p2,rootNode, 1);
+
+        c1 = new DefaultMutableTreeNode(c1Name);
+        modelToUpdate.insertNodeInto(c1, p1,0);
+
+        c2 = new DefaultMutableTreeNode(c2Name);
+        modelToUpdate.insertNodeInto(c2, p2,0);
+
+        //modelToUpdate.reload();
     }
 
     public void populateTreeModel() {
