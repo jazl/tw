@@ -44,6 +44,8 @@ public class TreeStuff extends JFrame {
     private void buildTree() {
         _tree = new JTree();
 
+        _tree.setRootVisible(true);
+
         root = new DefaultMutableTreeNode();
         DefaultTreeModel model = new DefaultTreeModel(root);
 
@@ -166,6 +168,15 @@ public class TreeStuff extends JFrame {
             });
             add(openSavedNodes);
 
+            JMenuItem validateSaved = new JMenuItem("Validate saved nodes against new model");
+            validateSaved.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JOptionPane.showMessageDialog(_tree, "Checking to see if treePaths match current model...");
+                }
+            });
+            add(validateSaved);
+
             JMenuItem search = new JMenuItem("Search");
             search.addActionListener(new ActionListener() {
                 @Override
@@ -235,6 +246,24 @@ public class TreeStuff extends JFrame {
             });
             add(deleteModelNodes);
 
+            add(new JSeparator());
+
+            JMenuItem insertNode = new JMenuItem("Insert node");
+            insertNode.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String nodeLabel = JOptionPane.showInputDialog("Enter label");
+                    if(nodeLabel != null) {
+                        DefaultMutableTreeNode node;
+                        DefaultTreeModel model = (DefaultTreeModel) (_tree.getModel());
+                        TreePath[] paths = _tree.getSelectionPaths();
+                        DefaultMutableTreeNode lastPathComponent = (DefaultMutableTreeNode) _tree.getSelectionPath().getLastPathComponent();
+                        System.out.println("Added node '"+nodeLabel+"' to node "+lastPathComponent);
+                    }
+                }
+            });
+            add(insertNode);
+
             addPopupMenuListener(new PopupMenuListener() {
                 @Override
                 public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -272,7 +301,6 @@ public class TreeStuff extends JFrame {
                 }
             }
         });
-
 
         JButton infoButton = new JButton("Info");
         infoButton.addActionListener(new ActionListener() {
@@ -338,31 +366,56 @@ public class TreeStuff extends JFrame {
         categoriesList.forEach(cat -> root.add(createCategoryNode(cat)));
     }
 
-    private void createCategoryNodesInModel(DefaultTreeModel model, int hashCode) {
+    private String formatNodeLabel(String string, int size) {
+        return string +" ("+String.valueOf(size)+")";
+    }
 
-        HashMap<String, ArrayList> issues;
+    private HashMap<String, ArrayList> generateIssues(int maxIssues, int exactNumIssues) {
         ArrayList<String> traceNodes;
-
         traceNodes = new ArrayList<>();
         traceNodes.add("ParameterParser.java:593 - getParameterValues(return)");
         traceNodes.add("ParameterParser.java:593 - Return");
         traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
+
+        HashMap<String, ArrayList> issues;
+        Random rand = new Random();
+        int numIssues = 0;
+        if(exactNumIssues<0) {
+            numIssues = rand.nextInt(maxIssues) + 1;
+        }
+        else {
+            numIssues = exactNumIssues;
+        }
+
         issues = new HashMap<>();
         issues.put("Exec.java:103", traceNodes);
-        for(int i=1; i<=50; i++) {
+        for(int i=1; i<numIssues; i++) {
             issues.put("Exec.java:"+i, traceNodes);
         }
-        DefaultMutableTreeNode groupingNodeAndChildren = createGroupingNodeAndChildren("Command Injection (3) - " + hashCode, issues);
+        return issues;
+    }
+
+    private void createCategoryNodesInModel(DefaultTreeModel model, int hashCode) {
+        HashMap<String, ArrayList> issues = generateIssues(4, -1);
+        DefaultMutableTreeNode groupingNodeAndChildren = createGroupingNodeAndChildren(formatNodeLabel("Cookie Security: Cookie not sent over SSL", issues.size()), issues);
         model.insertNodeInto(groupingNodeAndChildren,(DefaultMutableTreeNode)model.getRoot(),0);
 
-//        traceNodes = new ArrayList<>();
-//        traceNodes.add("ParameterParser.java:593 - getParameterValues(return)");
-//        traceNodes.add("ParameterParser.java:593 - Return");
-//        traceNodes.add("WSDLScanning.java:201 - getParameterValues(return)");
-//        issues = new HashMap<>();
-//        issues.put("Exec.java:103", traceNodes);
-//
-//        categoriesList.forEach(cat -> root.add(createCategoryNode(cat)));
+        issues = generateIssues(10,-1);
+        groupingNodeAndChildren = createGroupingNodeAndChildren(formatNodeLabel("Cross-Site Request Forgery", issues.size()), issues);
+        model.insertNodeInto(groupingNodeAndChildren,(DefaultMutableTreeNode)model.getRoot(),0);
+
+        issues = generateIssues(-1,50);
+        groupingNodeAndChildren = createGroupingNodeAndChildren(formatNodeLabel("Password Management: Password in Configuration File", issues.size()), issues);
+        model.insertNodeInto(groupingNodeAndChildren,(DefaultMutableTreeNode)model.getRoot(),0);
+
+        issues = generateIssues(7,-1);
+        groupingNodeAndChildren = createGroupingNodeAndChildren(formatNodeLabel("File Disclosure: J2EE", issues.size()), issues);
+        model.insertNodeInto(groupingNodeAndChildren,(DefaultMutableTreeNode)model.getRoot(),0);
+
+        issues = generateIssues(-1,66);
+        groupingNodeAndChildren = createGroupingNodeAndChildren(formatNodeLabel("SQL Injection", issues.size()), issues);
+        model.insertNodeInto(groupingNodeAndChildren,(DefaultMutableTreeNode)model.getRoot(),0);
+
     }
 
     private DefaultMutableTreeNode createCategoryNode(GroupTreeItem categoryItem) {
@@ -371,22 +424,53 @@ public class TreeStuff extends JFrame {
     }
 
     private DefaultMutableTreeNode createGroupingNodeAndChildren(String groupingNodeName, HashMap<String, ArrayList> issues) {
+        final int batchSize = 12;
         final DefaultMutableTreeNode groupingNode = new DefaultMutableTreeNode(groupingNodeName);
         groupingNode.setUserObject(new GroupTreeItem(groupingNodeName, groupingNodeName));
 
-        issues.forEach(new BiConsumer<String, ArrayList>() {
-            @Override
-            public void accept(String issueName, ArrayList traces) {
-
-                DefaultMutableTreeNode issueNode = new DefaultMutableTreeNode(issueName);
-                issueNode.setUserObject(new IssueTreeItem(issueName, issueName));
-
-                for(int i=0; i<traces.size(); i++) {
-                    issueNode.add(new DefaultMutableTreeNode(traces.get(i)));
+        int numIssues = issues.size();
+        if(numIssues<=batchSize) {
+            issues.forEach(new BiConsumer<String, ArrayList>() {
+                @Override
+                public void accept(String issueName, ArrayList traces) {
+                    DefaultMutableTreeNode issueNode = new DefaultMutableTreeNode(issueName);
+                    issueNode.setUserObject(new IssueTreeItem(issueName, issueName));
+                    for(int i=0; i<traces.size(); i++) {
+                        issueNode.add(new DefaultMutableTreeNode(traces.get(i)));
+                    }
+                    groupingNode.add(issueNode);
                 }
-                groupingNode.add(issueNode);
+            });
+        }
+        else {
+            // not precise... doesn't matter!
+            int numPages = numIssues/batchSize;
+            int currentPage = 1;
+            DefaultMutableTreeNode pagingNode = null;
+            for(String key:issues.keySet()) {
+                ArrayList traces = issues.get(key);
+                String issueName = key;
+                if(pagingNode == null) {
+                    pagingNode = new DefaultMutableTreeNode("["+String.valueOf(currentPage)+"-"+String.valueOf(50)+"]");;
+                }
+                else {
+                    DefaultMutableTreeNode issueNode = new DefaultMutableTreeNode(issueName);
+                    issueNode.setUserObject(new IssueTreeItem(issueName, issueName));
+                    for(int i=0; i<traces.size(); i++) {
+                        issueNode.add(new DefaultMutableTreeNode(traces.get(i)));
+                    }
+                    if(pagingNode.getChildCount()<batchSize) {
+                        pagingNode.add(issueNode);
+                    }
+                    else {
+                        pagingNode.add(issueNode);
+                        groupingNode.add(pagingNode);
+                        pagingNode = null;
+                        currentPage++;
+                    }
+                }
             }
-        });
+        }
 
         return groupingNode;
     }
