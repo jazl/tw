@@ -6,14 +6,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import javax.enterprise.inject.Default;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
+import javax.swing.tree.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 
@@ -23,7 +20,22 @@ public class DynamicTree extends JPanel {
     protected JTree tree;
     private Toolkit toolkit = Toolkit.getDefaultToolkit();
 
+    TreePath rootTreePath;
     private ArrayList<TreePath> expandedDescendants;
+
+    public void expandTreeBF()
+    {
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
+        Enumeration e = root.breadthFirstEnumeration();
+        while(e.hasMoreElements())
+        {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
+            System.out.println("Expanding: "+node);
+            if(node.isLeaf()) break;
+            int row = tree.getRowForPath(new TreePath(node.getPath()));
+            tree.expandRow(row);
+        }
+    }
 
     public DynamicTree() {
         super(new GridLayout(1,0));
@@ -36,6 +48,8 @@ public class DynamicTree extends JPanel {
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setShowsRootHandles(true);
 
+        rootTreePath = new TreePath(rootNode);
+
         populateTreeModel();
 
         JScrollPane scrollPane = new JScrollPane(tree);
@@ -43,20 +57,46 @@ public class DynamicTree extends JPanel {
     }
 
     public void saveExpandedNodes() {
-        expandedDescendants = Collections.list(tree.getExpandedDescendants(new TreePath(rootNode)));
+        expandedDescendants = Collections.list(tree.getExpandedDescendants(rootTreePath));
     }
 
     public void restoreExpandedNodes() {
+        ArrayList<TreePath> treePaths = new ArrayList<>();
+        Enumeration<DefaultMutableTreeNode> e = rootNode.depthFirstEnumeration();
+        e.nextElement();
+        while(e.hasMoreElements()) {
+            DefaultMutableTreeNode e1 = (DefaultMutableTreeNode) e;
+            treePaths.add(new TreePath(e1.getPath()));
+            e.nextElement();
+        }
+
         for(TreePath t:expandedDescendants) {
+            int rowForPath = tree.getRowForPath(t);
+            System.out.println("rowForPath "+t+" = "+rowForPath+", hashCode = "+t.hashCode());
+
+            TreePath refPath = tree.getPathForRow(1);
             tree.expandPath(t);
+
+//            tree.expandPath(new TreePath(t.getLastPathComponent()));
+
+//            DefaultMutableTreeNode pathComponent = (DefaultMutableTreeNode) t.getLastPathComponent();
+//            TreePath tp = new TreePath(pathComponent.getPath());
+//            tree.expandPath(tp);
         }
     }
 
     public void restoreExpandedNodes2() {
-        for(int i=0; i<tree.getRowCount(); i++) {
-            tree.expandRow(i);
+//        for(int i=0; i<tree.getRowCount(); i++) {
+//            tree.expandRow(i);
+//        }
+        //ArrayList<TreePath> expandedDescendantsCurrent = Collections.list(tree.getExpandedDescendants(rootTreePath));
+
+        ArrayList<TreePath> treePaths = new ArrayList<>();
+        Enumeration<DefaultMutableTreeNode> e = rootNode.depthFirstEnumeration();
+        while(e.hasMoreElements()) {
+            DefaultMutableTreeNode e1 = (DefaultMutableTreeNode) e;
+            treePaths.add(new TreePath(e1.getPath()));
         }
-        ArrayList<TreePath> expandedDescendantsCurrent = Collections.list(tree.getExpandedDescendants(new TreePath(rootNode)));
         for(TreePath t:expandedDescendants) {
             tree.expandPath(t);
         }
@@ -64,7 +104,6 @@ public class DynamicTree extends JPanel {
 
     public void createNewModel() {
         //treeModel = new DefaultTreeModel(rootNode);
-        rootNode.removeAllChildren();
 
         //populateTreeModel();
 //
@@ -73,7 +112,6 @@ public class DynamicTree extends JPanel {
 //        treeModel.insertNodeInto(new DefaultMutableTreeNode("new node 3 @ "+LocalDateTime.now()),rootNode,2);
 
         saveExpandedNodes();
-
         updateTreeModel();
 
         //treeModel.reload();
@@ -85,12 +123,13 @@ public class DynamicTree extends JPanel {
     }
 
     public void updateTreeModel() {
+        rootNode.removeAllChildren();
         DefaultTreeModel modelToUpdate = (DefaultTreeModel)tree.getModel();
         //((DefaultMutableTreeNode)tree.getModel().getRoot()).removeAllChildren();
 
         LocalDateTime now = LocalDateTime.now();
-        String p1Name = new String("Parent 1 @ "+now);
-        String p2Name = new String("Parent 2 @ "+now);
+        String p1Name = new String("Parent 1");
+        String p2Name = new String("Parent 2");
         String c1Name = new String("Child 1 @ "+now);
         String c2Name = new String("Child 2 @ "+now);
 
@@ -107,14 +146,14 @@ public class DynamicTree extends JPanel {
         c2 = new DefaultMutableTreeNode(c2Name);
         modelToUpdate.insertNodeInto(c2, p2,0);
 
-        //modelToUpdate.reload();
+        modelToUpdate.reload();
     }
 
     public void populateTreeModel() {
         DefaultTreeModel model = new DefaultTreeModel(rootNode);
         LocalDateTime now = LocalDateTime.now();
-        String p1Name = new String("Parent 1 @ "+now);
-        String p2Name = new String("Parent 2 @ "+now);
+        String p1Name = new String("Parent 1");
+        String p2Name = new String("Parent 2");
         String c1Name = new String("Child 1 @ "+now);
         String c2Name = new String("Child 2 @ "+now);
 
