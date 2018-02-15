@@ -112,19 +112,19 @@ public class TreeStuff extends JFrame {
 
     private void saveExpandedNodes() {
 
-        expandedTreePathList = new ArrayList<TreePath>();
+        expandedTreePathList = new ArrayList<>();
 
-        Enumeration<TreePath> e = _tree.getExpandedDescendants(rootPath);
-        while(e.hasMoreElements()) {
-            TreePath path = (TreePath) e.nextElement();
-            System.out.println("Enumerated path: "+path+" cnt "+path.getPath().length);
-            if(path.getPath().length>2) {
-                expandedTreePathList.add(path);
-            }
-        }
+//        Enumeration<TreePath> e = _tree.getExpandedDescendants(rootPath);
+//        while(e.hasMoreElements()) {
+//            TreePath path = (TreePath) e.nextElement();
+//            System.out.println("Enumerated path: "+path+" cnt "+path.getPath().length);
+//            if(path.getPath().length>2) {
+//                expandedTreePathList.add(path);
+//            }
+//        }
 
-        expandedTreePathListOld = expandedTreePathList;
-//        expandedTreePathList = Collections.list(_tree.getExpandedDescendants(rootPath));
+        //expandedTreePathListOld = expandedTreePathList;
+        expandedTreePathList = Collections.list(_tree.getExpandedDescendants(rootPath));
 
         System.out.println("Saved "+expandedTreePathList.size()+" expanded nodes:");
 
@@ -135,8 +135,19 @@ public class TreeStuff extends JFrame {
 
     private void openSavedNodes() {
         if(expandedTreePathList!=null && expandedTreePathList.size()>0) {
+            Collections.sort(expandedTreePathList, new Comparator<TreePath>() {
+                @Override
+                public int compare(TreePath o1, TreePath o2) {
+                    int p1cnt = o1.getPathCount();
+                    int p2cnt = o2.getPathCount();
+                    // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                    return p1cnt<p2cnt ? -1 : (p1cnt>p2cnt) ? 1 : 0;
+                }
+            });
+
             System.out.println("Opening "+expandedTreePathList.size()+" saved nodes");
             for(TreePath tp:expandedTreePathList) {
+                System.out.println("..."+tp);
                 _tree.expandPath(tp);
             }
         }
@@ -545,4 +556,12 @@ public class TreeStuff extends JFrame {
     }
     private ArrayList<GroupTreeItem> categoriesList;
 
+    class TreePathInfo {
+        public TreePathInfo(int pathCount, TreePath treePath) {
+            this.pathCount = pathCount;
+            this.treePath = treePath;
+        }
+        public int pathCount;
+        public TreePath treePath;
+    }
 }
