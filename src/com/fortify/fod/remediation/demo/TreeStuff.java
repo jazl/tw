@@ -111,12 +111,26 @@ public class TreeStuff extends JFrame {
     }
 
     private void saveExpandedNodes() {
+
+        expandedTreePathList = new ArrayList<TreePath>();
+
+        Enumeration<TreePath> e = _tree.getExpandedDescendants(rootPath);
+        while(e.hasMoreElements()) {
+            TreePath path = (TreePath) e.nextElement();
+            System.out.println("Enumerated path: "+path+" cnt "+path.getPath().length);
+            if(path.getPath().length>2) {
+                expandedTreePathList.add(path);
+            }
+        }
+
         expandedTreePathListOld = expandedTreePathList;
-        expandedTreePathList = Collections.list(_tree.getExpandedDescendants(rootPath));
+//        expandedTreePathList = Collections.list(_tree.getExpandedDescendants(rootPath));
 
-        boolean test = expandedTreePathListOld.get(0).toString().equals(expandedTreePathList.get(0).toString());
+        System.out.println("Saved "+expandedTreePathList.size()+" expanded nodes:");
 
-        System.out.println("Saved "+expandedTreePathList.size()+" expanded nodes");
+        for(TreePath path:expandedTreePathList) {
+            System.out.println("..."+path);
+        }
     }
 
     private void openSavedNodes() {
@@ -295,7 +309,6 @@ public class TreeStuff extends JFrame {
             addPopupMenuListener(new PopupMenuListener() {
                 @Override
                 public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                    System.out.println("popupMenuWillBecomeVisible");
                     TreePopUpMenu source = (TreePopUpMenu) e.getSource();
                     JTree invoker = (JTree) source.getInvoker();
                     TreePath selectionPath = invoker.getSelectionPath();
