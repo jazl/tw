@@ -1,6 +1,5 @@
 package com.fortify.fod.remediation.demo;
 
-import java.awt.*;
 import java.time.LocalTime;
 import java.util.*;
 import javax.swing.*;
