@@ -14,6 +14,8 @@ import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+// From here: https://gist.github.com/skrb/2333689
+
 public class WebViewBasic extends Application {
     @Override
     public void start(Stage stage) throws Exception {
@@ -72,5 +74,3 @@ public class WebViewBasic extends Application {
         Application.launch(args);
     }
 }
-
-// From here: https://gist.github.com/skrb/2333689
